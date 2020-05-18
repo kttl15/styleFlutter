@@ -6,7 +6,7 @@ import 'package:gan2/home/floating_button/bloc/fab_bloc.dart';
 import 'package:gan2/home/floating_button/fab_button.dart';
 import 'package:gan2/home/list_view/bloc/listview_bloc.dart';
 import 'package:gan2/home/list_view/list_view_builder.dart';
-import 'package:gan2/new_process/bloc/upload_bloc.dart';
+// import 'package:gan2/new_process/bloc/upload_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   final FirebaseUser user;

@@ -39,11 +39,11 @@ class ProcessTileBloc extends Bloc<ProcessTileEvent, ProcessTileState> {
         iconOutputFile.createSync();
         await FirebaseStorage.instance
             .ref()
-            .child(data.locOutput)
+            .child(data.locIconContent) //! change to data.locIconOutput
             .writeToFile(iconOutputFile)
             .future;
-        outputIconAvailable = true;
       }
+      outputIconAvailable = true;
     } catch (_) {}
   }
 }
