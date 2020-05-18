@@ -15,6 +15,7 @@ class OutputData {
   final double epoch;
   final bool unprocessedFlag;
   final bool runOnUpload;
+  final bool isDone;
 
   OutputData({
     @required this.uid,
@@ -30,6 +31,7 @@ class OutputData {
     @required this.epoch,
     @required this.unprocessedFlag,
     @required this.runOnUpload,
+    @required this.isDone,
   });
 
   @override
@@ -45,6 +47,7 @@ class OutputData {
     styleWeight: $styleWeight,
     epoch: $epoch,
     unprocessedFlag: $unprocessedFlag,
-    runOnUpload: $runOnUpload
+    runOnUpload: $runOnUpload,
+    isDone: $isDone,
   }''';
 }

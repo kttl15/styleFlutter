@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: BlocProvider(
         create: (context) => FabBloc(),
-        child: FAB(),
+        child: FAB(user: user),
       ),
     );
   }

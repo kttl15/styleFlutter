@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gan2/home/list_view/bloc/listview_bloc.dart';
@@ -6,24 +7,27 @@ import 'dart:io';
 
 import 'package:gan2/new_process/choose_image.dart';
 import 'package:gan2/new_process/upload_button.dart';
+import 'package:gan2/services/user_repo.dart';
 
 class NewProcessForm extends StatefulWidget {
+  final FirebaseUser user;
+
+  const NewProcessForm({Key key, @required this.user}) : super(key: key);
   @override
   _NewProcessFormState createState() => _NewProcessFormState();
 }
 
 class _NewProcessFormState extends State<NewProcessForm> {
-  File _baseImage;
+  File _contentImage;
   File _styleImage;
   String _processName = '';
   double _contentWeight = 1;
   double _styleWeight = 1;
   double _epoch = 1;
   bool showUploadingSnackBar = true;
-  // UploadBloc _uploadBloc;
-
   bool _uploadRadioButton = true;
   bool _uploadLoading = false;
+  bool _validProcessName = true;
 
   Future<File> _chooseImage(BuildContext context) async {
     return await Navigator.push(
@@ -39,13 +43,14 @@ class _NewProcessFormState extends State<NewProcessForm> {
     FocusScope.of(context).requestFocus(new FocusNode());
   }
 
-  void _onUpload() {
+  void _onUpload() async {
     setState(() {
       _uploadLoading = true;
     });
     _looseKeyboardFocus();
     BlocProvider.of<UploadBloc>(context).add(StartUpload(
-      baseFile: _baseImage,
+      uid: widget.user.uid,
+      contentFile: _contentImage,
       processName: _processName,
       styleFile: _styleImage,
       contentWeight: _contentWeight,
@@ -59,7 +64,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
     //* ensures that process name and both images are present
     return _processName.length >= 4 &&
         _styleImage != null &&
-        _baseImage != null;
+        _contentImage != null;
   }
 
   ScaffoldState _showSnackBar({String text}) {
@@ -112,6 +117,14 @@ class _NewProcessFormState extends State<NewProcessForm> {
             showUploadingSnackBar = false;
           });
         }
+        if (state is InvalidProcessName) {
+          _showSnackBar(text: 'Invalid Process Name');
+          setState(() {
+            _uploadLoading = false;
+            _validProcessName = false;
+          });
+          BlocProvider.of<UploadBloc>(context).add(RevertToInit());
+        }
       },
       child: BlocBuilder<UploadBloc, UploadState>(
         builder: (context, state) {
@@ -123,12 +136,17 @@ class _NewProcessFormState extends State<NewProcessForm> {
                   autovalidate: true,
                   validator: (val) {
                     //TODO: implement a more robust validator
-                    return val.length <= 3
-                        ? 'Enter A Valid Process Name'
-                        : null;
+                    if (!_validProcessName) {
+                      return 'You already have this process name. Please choose another.';
+                    } else {
+                      return val.length <= 3
+                          ? 'Enter A Valid Process Name'
+                          : null;
+                    }
                   },
                   onChanged: (val) {
                     setState(() {
+                      _validProcessName = true;
                       _processName = val.trim();
                     });
                   },
@@ -142,8 +160,8 @@ class _NewProcessFormState extends State<NewProcessForm> {
                   height: 80,
                   child: Center(
                     child: ListTile(
-                      leading: _baseImage != null
-                          ? Image.file(_baseImage)
+                      leading: _contentImage != null
+                          ? Image.file(_contentImage)
                           : Icon(Icons.image),
                       title: Text(
                         'Content Image',
@@ -156,7 +174,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                         File result = await _chooseImage(context);
                         if (result != null) {
                           setState(() {
-                            _baseImage = result;
+                            _contentImage = result;
                           });
                         }
                       },
@@ -318,7 +336,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                 SizedBox(
                   height: 20,
                 ),
-                if (state is Initial)
+                if (state is Initial || state is InvalidProcessName)
                   if (_uploadLoading)
                     //TODO: optimise
                     Container(

@@ -11,8 +11,6 @@ part 'processtile_event.dart';
 part 'processtile_state.dart';
 
 class ProcessTileBloc extends Bloc<ProcessTileEvent, ProcessTileState> {
-  bool outputIconAvailable = false;
-
   @override
   ProcessTileState get initialState => ProcessTileInitial();
 
@@ -21,19 +19,21 @@ class ProcessTileBloc extends Bloc<ProcessTileEvent, ProcessTileState> {
     ProcessTileEvent event,
   ) async* {
     if (event is DownloadOutputEvent) {
-      await _downloadOutputIcon(data: event.data);
-      if (outputIconAvailable)
+      yield OutputImageLoading();
+      bool outputImageDownloaded = await _downloadOutputIcon(data: event.data);
+      if (outputImageDownloaded)
         yield OutputImageDownloadedState(data: event.data);
       else
         yield OutputImageNotAvailableState();
     }
   }
 
-  Future<void> _downloadOutputIcon({@required OutputData data}) async {
+  Future<bool> _downloadOutputIcon({@required OutputData data}) async {
     final Directory tempDir = Directory.systemTemp;
     File iconOutputFile;
     iconOutputFile =
-        File('${tempDir.path}/${data.uid}${data.processName}iconOutput.jpg');
+        File('${tempDir.path}/${data.uid}${data.processName}_iconOutput.jpg');
+    print(iconOutputFile.path);
     try {
       if (!iconOutputFile.existsSync()) {
         iconOutputFile.createSync();
@@ -43,7 +43,9 @@ class ProcessTileBloc extends Bloc<ProcessTileEvent, ProcessTileState> {
             .writeToFile(iconOutputFile)
             .future;
       }
-      outputIconAvailable = true;
-    } catch (_) {}
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 }

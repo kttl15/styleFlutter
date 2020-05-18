@@ -39,8 +39,11 @@ class _ProcessTileState extends State<ProcessTile> {
     return BlocConsumer<ProcessTileBloc, ProcessTileState>(
       listener: (context, state) {
         if (state is OutputImageDownloadedState) {
-          iconOutputFile = File(
-              '${tempDir.path}/${widget._data.uid}${widget._data.processName}iconOutput.jpg');
+          setState(() {
+            iconOutputFile = File(
+                '${tempDir.path}/${widget._data.uid}${widget._data.processName}_iconOutput.jpg');
+            print(iconOutputFile.path);
+          });
         }
       },
       builder: (context, state) {
@@ -50,8 +53,7 @@ class _ProcessTileState extends State<ProcessTile> {
           ),
           //TODO: change subtitle
           subtitle: Text(
-            widget._data.uid,
-          ),
+              '${tempDir.path}/${widget._data.uid}${widget._data.processName}_iconOutput.jpg'),
           leading: state is OutputImageDownloadedState
               ? Image.file(
                   iconOutputFile,

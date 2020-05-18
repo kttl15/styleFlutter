@@ -22,6 +22,11 @@ class OutputImageDownloadedState extends ProcessTileState {
   String toString() => 'OutputImageDownloadedState';
 }
 
+class OutputImageLoading extends ProcessTileState {
+  @override
+  String toString() => 'OutputImageLoading';
+}
+
 class OutputImageNotAvailableState extends ProcessTileState {
   @override
   String toString() => 'OutputImageNotAvailableState';

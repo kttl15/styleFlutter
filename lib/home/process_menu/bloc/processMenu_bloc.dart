@@ -31,7 +31,6 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
 
   _deleteProcess({@required OutputData data}) async {
     final String path = 'images/${data.uid}/${data.processName}/';
-    // print(path);
     Firestore.instance
         .collection('images')
         .document(data.uid)
@@ -64,33 +63,42 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
     File iconContentFile;
     File iconStyleFile;
     // File iconOutputFile;
+
     //TODO: implement output file
     iconContentFile =
         File('${tempDir.path}/${data.uid}${data.processName}_iconContent.jpg');
     iconStyleFile =
         File('${tempDir.path}/${data.uid}${data.processName}_iconStyle.jpg');
+    // iconOutputFile =
+    //     File('${tempDir.path}/${data.uid}${data.processName}_iconOutput.jpg');
 
-    Future<void> _getContent() async {
-      if (!iconContentFile.existsSync()) {
-        iconContentFile.createSync();
-        await _stoRef
-            .child(data.locIconContent)
-            .writeToFile(iconContentFile)
-            .future;
+    Future<void> _getFile({@required File file, @required String loc}) async {
+      if (!file.existsSync()) {
+        file.createSync();
+        await _stoRef.child(loc).writeToFile(file).future;
       }
     }
 
-    Future<void> _getStyle() async {
-      if (!iconStyleFile.existsSync()) {
-        iconStyleFile.createSync();
-        await _stoRef
-            .child(data.locIconStyle)
-            .writeToFile(iconStyleFile)
-            .future;
+    Future<void> _getOutputs({
+      @required File file,
+      @required String loc,
+    }) async {
+      if (data.isDone) {
+        //* add method to get multiple outputs
+        if (!file.existsSync()) {
+          file.createSync();
+          await _stoRef.child(loc).writeToFile(file).future;
+        }
+      } else {
+        print('process is not done.');
       }
     }
 
-    await Future.wait([_getContent(), _getStyle()]).then((val) {});
+    await Future.wait([
+      _getFile(file: iconContentFile, loc: data.locIconContent),
+      _getFile(file: iconStyleFile, loc: data.locIconStyle),
+      // _getOutputs(file: iconOutputFile, loc: data.locOutput)
+    ]).then((_) {});
   }
 
   _startProcess({@required OutputData data}) {

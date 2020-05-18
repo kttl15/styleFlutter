@@ -6,9 +6,12 @@ abstract class UploadEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class RevertToInit extends UploadEvent {}
+
 class StartUpload extends UploadEvent {
+  final String uid;
   final String processName;
-  final File baseFile;
+  final File contentFile;
   final File styleFile;
   final double styleWeight;
   final double contentWeight;
@@ -16,8 +19,9 @@ class StartUpload extends UploadEvent {
   final bool runOnUpload;
 
   StartUpload({
+    @required this.uid,
     @required this.processName,
-    @required this.baseFile,
+    @required this.contentFile,
     @required this.styleFile,
     @required this.styleWeight,
     @required this.contentWeight,

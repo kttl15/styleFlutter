@@ -64,6 +64,7 @@ class ListViewBloc extends Bloc<ListViewEvent, ListViewState> {
               epoch: process.data['epoch'],
               unprocessedFlag: process.data['unprocessedFlag'],
               runOnUpload: process.data['runOnUpload'],
+              isDone: process.data['isDone'],
             ),
           );
         }

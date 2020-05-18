@@ -25,15 +25,22 @@ class Uploader {
     final ImageStorageService _imageStorageService = ImageStorageService();
     final String uid = user.uid;
     final Directory tempDir = Directory.systemTemp;
-    var iconImage = decodeImage(image.readAsBytesSync());
-    var icon;
-    if (iconImage.width > iconImage.height) {
-      icon = copyResize(iconImage, width: 500);
+    File iconFile;
+
+    if (image.readAsBytesSync().lengthInBytes >= 500000) {
+      var iconImage = decodeImage(image.readAsBytesSync());
+      var icon;
+      print([iconImage.width, iconImage.height]);
+      if (iconImage.width > iconImage.height) {
+        icon = copyResize(iconImage, width: 500);
+      } else {
+        icon = copyResize(iconImage, height: 500);
+      }
+      File('${tempDir.path}/icon.jpg').writeAsBytesSync(encodeJpg(icon));
+      iconFile = File('${tempDir.path}/icon.jpg');
     } else {
-      icon = copyResize(iconImage, height: 500);
+      iconFile = image;
     }
-    File('${tempDir.path}/icon.jpg').writeAsBytesSync(encodeJpg(icon));
-    File iconFile = File('${tempDir.path}/icon.jpg');
 
     String contentLoc = 'images/$uid/$processName/content.jpg';
     String iconContentLoc = 'images/$uid/$processName/iconContent.jpg';
@@ -65,6 +72,7 @@ class Uploader {
         'contentWeight': contentWeight,
         'epoch': epoch,
         'runOnUpload': runOnUpload,
+        'isDone': false
       };
       createProcessDoc(
         uid: uid,

@@ -103,10 +103,39 @@ class _ProcessMenuState extends State<ProcessMenu> {
                             child: Center(child: CircularProgressIndicator())),
                       ]),
                     ),
-                  Text('Content Weight: ${widget._data.contentWeight.round()}'),
-                  Text('Style Weight: ${widget._data.styleWeight.round()}'),
-                  Text('Duration: ${widget._data.epoch.round()}'),
-                  Text('RunOnUpload: ${widget._data.runOnUpload}'),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    'Content Weight: ${widget._data.contentWeight.round()}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    'Style Weight: ${widget._data.styleWeight.round()}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    'Duration: ${widget._data.epoch.round()}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    'RunOnUpload: ${widget._data.runOnUpload}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  Text(
+                    'Done: ${widget._data.isDone}',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  )
                 ],
               ),
             ),

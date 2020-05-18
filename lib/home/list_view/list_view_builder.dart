@@ -76,7 +76,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   itemCount: state.data.length,
                   reverse: false,
                   itemBuilder: (BuildContext context, int index) {
-                    print(index);
                     return Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Container(

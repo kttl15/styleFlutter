@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gan2/new_process/uploader.dart';
 import 'package:meta/meta.dart';
@@ -15,24 +17,48 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
   UploadState get initialState => Initial();
 
   @override
-  Stream<UploadState> mapEventToState(
-    UploadEvent event,
-  ) async* {
+  Stream<UploadState> mapEventToState(UploadEvent event) async* {
+    if (event is RevertToInit) {
+      yield Initial();
+    }
     if (event is StartUpload) {
-      _mapStartUpload(
+      bool isValidProcessName = await _checkProcessName(
+        uid: event.uid,
         processName: event.processName,
-        contentFile: event.baseFile,
-        styleFile: event.styleFile,
-        styleWeight: event.styleWeight,
-        contentWeight: event.contentWeight,
-        epoch: event.epoch,
-        runOnUpload: event.runOnUpload,
       );
+      if (isValidProcessName) {
+        _mapStartUpload(
+          processName: event.processName,
+          contentFile: event.contentFile,
+          styleFile: event.styleFile,
+          styleWeight: event.styleWeight,
+          contentWeight: event.contentWeight,
+          epoch: event.epoch,
+          runOnUpload: event.runOnUpload,
+        );
+      } else {
+        yield InvalidProcessName(processName: event.processName);
+      }
     } else if (event is Update) {
       yield* _mapUpdate(task: event.task);
     } else if (event is UploadCompleted) {
       yield* _mapUploadCompleted();
     }
+  }
+
+  Future<bool> _checkProcessName({String uid, String processName}) async {
+    bool isValidProcessName = true;
+    await Firestore.instance
+        .collection('images')
+        .document(uid)
+        .collection('process')
+        .getDocuments()
+        .then((val) {
+      val.documents.forEach((doc) {
+        if (processName == doc.documentID) isValidProcessName = false;
+      });
+    });
+    return isValidProcessName;
   }
 
   void _mapStartUpload({
