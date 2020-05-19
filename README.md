@@ -2,4 +2,6 @@
 
 TODO: use unprocessedFlag instead of isDone
 
-      change unprocessedFlag to isProcessed
+TODO: change unprocessedFlag to isProcessed
+
+TODO: add startDate
