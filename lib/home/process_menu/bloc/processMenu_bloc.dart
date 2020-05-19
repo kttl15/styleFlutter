@@ -49,12 +49,12 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
     try {
       _stoRef.child(path + 'iconStyle.jpg').delete();
     } catch (_) {}
-    try {
-      _stoRef.child(path + 'output.jpg').delete();
-    } catch (_) {}
-    try {
-      _stoRef.child(path + 'iconOutput.jpg').delete();
-    } catch (_) {}
+    // try {
+    //   _stoRef.child(path + 'output.jpg').delete();
+    // } catch (_) {}
+    // try {
+    //   _stoRef.child(path + 'iconOutput.jpg').delete();
+    // } catch (_) {}
     print('Deleted');
   }
 

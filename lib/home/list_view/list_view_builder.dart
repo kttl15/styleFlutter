@@ -4,7 +4,6 @@ import 'package:gan2/home/list_view/bloc/listview_bloc.dart';
 import 'package:gan2/home/process_menu/bloc/processMenu_bloc.dart';
 import 'package:gan2/home/process_tile/bloc/processtile_bloc.dart';
 import 'package:gan2/home/process_tile/process_tile.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ListViewBuilder extends StatefulWidget {
   //TODO switch between list and grid view
@@ -16,18 +15,9 @@ class ListViewBuilder extends StatefulWidget {
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
   ListViewBloc _listViewBloc;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
 
-  void _onRefresh() async {
+  Future<void> _onRefresh() async {
     _listViewBloc.add(RefreshData());
-    _refreshController.refreshCompleted();
-  }
-
-  void _onLoading() async {
-    //* do stuff
-    // setState(() {});
-    _refreshController.loadComplete();
   }
 
   @override
@@ -65,45 +55,43 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                   ),
                 );
-              }
-
-              return SmartRefresher(
-                controller: _refreshController,
-                enablePullDown: true,
-                onRefresh: _onRefresh,
-                onLoading: _onLoading,
-                child: ListView.builder(
-                  itemCount: state.data.length,
-                  reverse: false,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Container(
-                        height: 100,
-                        color: Colors.lightBlue[200],
-                        child: Center(
-                          child: MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                create: (context) => ProcessMenuBloc(),
+              } else {
+                return RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: ListView.builder(
+                    reverse: false,
+                    itemCount: state.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Container(
+                          height: 100,
+                          color: Colors.lightBlue[200],
+                          child: Center(
+                            child: MultiBlocProvider(
+                              providers: [
+                                BlocProvider(
+                                  create: (context) => ProcessMenuBloc(),
+                                ),
+                                BlocProvider(
+                                  create: (context) => ListViewBloc(),
+                                ),
+                                BlocProvider(
+                                  create: (context) => ProcessTileBloc(),
+                                )
+                              ],
+                              child: ProcessTile(
+                                data: state.data[index],
+                                key: ValueKey(state.data[index].processName),
                               ),
-                              BlocProvider(
-                                create: (context) => ListViewBloc(),
-                              ),
-                              BlocProvider(
-                                create: (context) => ProcessTileBloc(),
-                              )
-                            ],
-                            child: ProcessTile(
-                              data: state.data[index],
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              );
+                      );
+                    },
+                  ),
+                );
+              }
             }
             return loading();
           },

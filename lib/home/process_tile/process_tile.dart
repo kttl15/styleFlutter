@@ -48,19 +48,20 @@ class _ProcessTileState extends State<ProcessTile> {
       },
       builder: (context, state) {
         return ListTile(
+          key: ValueKey(widget.key),
           title: Text(
             'Process Name: ' + widget._data.processName,
           ),
           //TODO: change subtitle
           subtitle: Text(
               '${tempDir.path}/${widget._data.uid}${widget._data.processName}_iconOutput.jpg'),
-          leading: state is OutputImageDownloadedState
+          leading: state is OutputImageDownloadedState && iconOutputFile != null
               ? Image.file(
                   iconOutputFile,
                   width: 60,
                 )
               : SizedBox(
-                  width: 80,
+                  width: 60,
                   child: Icon(
                     Icons.image,
                     size: 60,

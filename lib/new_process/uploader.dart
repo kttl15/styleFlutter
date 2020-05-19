@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:gan2/services/storage.dart';
 import 'package:gan2/services/user_repo.dart';
 import 'package:image/image.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:meta/meta.dart';
 
 class Uploader {

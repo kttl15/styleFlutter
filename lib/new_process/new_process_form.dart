@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gan2/home/list_view/bloc/listview_bloc.dart';
 import 'package:gan2/new_process/bloc/upload_bloc.dart';
 import 'dart:io';
 
 import 'package:gan2/new_process/choose_image.dart';
 import 'package:gan2/new_process/upload_button.dart';
-import 'package:gan2/services/user_repo.dart';
 
 class NewProcessForm extends StatefulWidget {
   final FirebaseUser user;
