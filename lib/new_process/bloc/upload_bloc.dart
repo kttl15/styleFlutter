@@ -25,7 +25,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
         uid: event.uid,
         processName: event.processName,
       );
-      if (isValidProcessName) {
+      if (!isValidProcessName) {
         _mapStartUpload(
           processName: event.processName,
           contentFile: event.contentFile,
@@ -36,7 +36,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
           runOnUpload: event.runOnUpload,
         );
       } else {
-        yield InvalidProcessName(processName: event.processName);
+        yield ProcessNameUsedState(processName: event.processName);
       }
     } else if (event is Update) {
       yield* _mapUpdate(task: event.task);
@@ -46,7 +46,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
   }
 
   Future<bool> _checkProcessName({String uid, String processName}) async {
-    bool isValidProcessName = true;
+    bool isProcessNameUsed = false;
     await Firestore.instance
         .collection('images')
         .document(uid)
@@ -54,10 +54,10 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
         .getDocuments()
         .then((val) {
       val.documents.forEach((doc) {
-        if (processName == doc.documentID) isValidProcessName = false;
+        if (processName == doc.documentID) isProcessNameUsed = true;
       });
     });
-    return isValidProcessName;
+    return isProcessNameUsed;
   }
 
   void _mapStartUpload({

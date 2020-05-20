@@ -50,7 +50,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _onEmailChanged() {
-    _loginBloc.add(EmailChanged(email: _emailController.text));
+    _loginBloc.add(EmailChanged(email: _emailController.text.trim()));
   }
 
   void _onPasswordChanged() {
@@ -60,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
   void _onLogin() {
     _loginBloc.add(
       LoginWithCredentialsPressed(
-        email: _emailController.text,
+        email: _emailController.text.trim(),
         password: _passwordController.text,
       ),
     );

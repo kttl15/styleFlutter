@@ -36,6 +36,7 @@ dependencies:
   image_cropper: ^1.2.1
   pull_to_refresh: ^1.5.8
   image: ^2.1.12
+  path_provider: ^1.6.8
 
 dev_dependencies:
   flutter_test:

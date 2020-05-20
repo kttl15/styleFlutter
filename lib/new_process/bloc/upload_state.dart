@@ -47,10 +47,10 @@ class InProgress extends UploadState {
   }
 }
 
-class InvalidProcessName extends UploadState {
+class ProcessNameUsedState extends UploadState {
   final String processName;
 
-  InvalidProcessName({@required this.processName});
+  ProcessNameUsedState({@required this.processName});
 }
 
 class Completed extends UploadState {}
