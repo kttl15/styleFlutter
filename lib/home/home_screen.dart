@@ -18,7 +18,8 @@ class HomeScreen extends StatelessWidget {
     //TODO refresh when done uploading
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home: ' + user.email),
+        title: Text('Home: ' + user.email,
+            style: Theme.of(context).textTheme.headline1),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),

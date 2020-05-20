@@ -6,6 +6,7 @@ import 'package:gan2/home/home_screen.dart';
 import 'package:gan2/login/login_screen.dart';
 import 'package:gan2/services/user_repo.dart';
 import 'package:gan2/splash_screen.dart';
+import 'package:gan2/theme.dart';
 
 void main() {
   //* needed if code is executed before runApp
@@ -29,6 +30,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: AppTheme().themeData(),
       //* use BlocBuilder to render UI based on AuthenticationBloc
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
