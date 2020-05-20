@@ -58,13 +58,12 @@ class ListViewBloc extends Bloc<ListViewEvent, ListViewState> {
               locIconContent: process.data['locIconContent'],
               locStyle: process.data['locStyle'],
               locIconStyle: process.data['locIconStyle'],
-              locOutput: process.data['locOutput'],
+              locOutputs: process.data['locOutputs'],
               contentWeight: process.data['contentWeight'],
               styleWeight: process.data['styleWeight'],
               epoch: process.data['epoch'],
-              unprocessedFlag: process.data['unprocessedFlag'],
+              isProcessed: process.data['isProcessed'],
               runOnUpload: process.data['runOnUpload'],
-              isDone: process.data['isDone'],
             ),
           );
         }

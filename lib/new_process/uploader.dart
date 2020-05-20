@@ -63,15 +63,15 @@ class Uploader {
         'locIconContent': iconContentLoc,
         'locStyle': styleLoc,
         'locIconStyle': iconStyleLoc,
-        'locOutput': '',
-        'locIconOutput': '',
+        'locOutputs': {1: ''},
+        'locIconOutputs': '',
         'uploadDate': DateTime.now(),
-        'unprocessedFlag': true,
+        'isProcessed': true,
         'styleWeight': styleWeight,
         'contentWeight': contentWeight,
         'epoch': epoch,
         'runOnUpload': runOnUpload,
-        'isDone': false
+        'startDate': runOnUpload ? DateTime.now() : '',
       };
       createProcessDoc(
         uid: uid,

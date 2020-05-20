@@ -9,13 +9,13 @@ class OutputData {
   final String locIconContent;
   final String locStyle;
   final String locIconStyle;
-  final String locOutput;
+  final Map<String, dynamic> locOutputs;
+  // final String locIconOutputs;
   final double contentWeight;
   final double styleWeight;
   final double epoch;
-  final bool unprocessedFlag;
+  final bool isProcessed;
   final bool runOnUpload;
-  final bool isDone;
 
   OutputData({
     @required this.uid,
@@ -25,13 +25,12 @@ class OutputData {
     @required this.locIconContent,
     @required this.locStyle,
     @required this.locIconStyle,
-    @required this.locOutput,
+    @required this.locOutputs,
     @required this.contentWeight,
     @required this.styleWeight,
     @required this.epoch,
-    @required this.unprocessedFlag,
+    @required this.isProcessed,
     @required this.runOnUpload,
-    @required this.isDone,
   });
 
   @override
@@ -42,12 +41,11 @@ class OutputData {
     date: $uploadDate,
     locContent: $locContent,
     locStyle: $locStyle,
-    locOutput: $locOutput,
+    locOutputs: $locOutputs,
     contentWeight: $contentWeight,
     styleWeight: $styleWeight,
     epoch: $epoch,
-    unprocessedFlag: $unprocessedFlag,
+    isProcessed: $isProcessed,
     runOnUpload: $runOnUpload,
-    isDone: $isDone,
   }''';
 }

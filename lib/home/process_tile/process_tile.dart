@@ -50,7 +50,9 @@ class _ProcessTileState extends State<ProcessTile> {
         return ListTile(
           key: ValueKey(widget.key),
           title: Text(
-            'Process Name: ' + widget._data.processName,
+            'Process Name: ' +
+                widget._data.processName +
+                ' ${widget._data.isProcessed}',
           ),
           //TODO: change subtitle
           subtitle: Text(

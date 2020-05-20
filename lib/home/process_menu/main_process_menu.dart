@@ -21,6 +21,8 @@ class _ProcessMenuState extends State<ProcessMenu> {
   ProcessMenuBloc _processTileBloc;
   File iconContentFile;
   File iconStyleFile;
+  List<File> iconOutputFiles = List<File>();
+
   @override
   void initState() {
     _processTileBloc = BlocProvider.of<ProcessMenuBloc>(context);
@@ -37,6 +39,16 @@ class _ProcessMenuState extends State<ProcessMenu> {
               '${tempDir.path}/${widget._data.uid}${widget._data.processName}_iconContent.jpg');
           iconStyleFile = File(
               '${tempDir.path}/${widget._data.uid}${widget._data.processName}_iconStyle.jpg');
+
+          if (widget._data.isProcessed) {
+            widget._data.locOutputs.forEach((key, value) {
+              List<String> outputNameList = value.split('/').toList();
+              String outputName = outputNameList[outputNameList.length - 1];
+              File tempFile = File(
+                  '${tempDir.path}/${widget._data.uid}${widget._data.processName}_$outputName');
+              iconOutputFiles.add(tempFile);
+            });
+          }
         }
         return true;
       },
@@ -131,11 +143,15 @@ class _ProcessMenuState extends State<ProcessMenu> {
                     ),
                   ),
                   Text(
-                    'Done: ${widget._data.isDone}',
+                    'isProcessed: ${widget._data.isProcessed}',
                     style: TextStyle(
                       fontSize: 18,
                     ),
-                  )
+                  ),
+                  if (state is ImageDownloadedState && widget._data.isProcessed)
+                    _outputWidget()
+                  else
+                    Container()
                 ],
               ),
             ),
@@ -143,5 +159,13 @@ class _ProcessMenuState extends State<ProcessMenu> {
         );
       },
     );
+  }
+
+  Widget _outputWidget() {
+    List<Widget> list = List<Widget>();
+    iconOutputFiles.forEach((element) {
+      list.add(Image.file(element));
+    });
+    return Column(children: list);
   }
 }

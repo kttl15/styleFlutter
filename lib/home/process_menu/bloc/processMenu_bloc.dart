@@ -62,47 +62,47 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
     final Directory tempDir = Directory.systemTemp;
     File iconContentFile;
     File iconStyleFile;
-    // File iconOutputFile;
-
+    List<File> iconOutputFiles = List<File>();
+    List<Future<void>> getOps = List<Future<void>>();
     //TODO: implement output file
-    iconContentFile =
-        File('${tempDir.path}/${data.uid}${data.processName}_iconContent.jpg');
-    iconStyleFile =
-        File('${tempDir.path}/${data.uid}${data.processName}_iconStyle.jpg');
-    // iconOutputFile =
-    //     File('${tempDir.path}/${data.uid}${data.processName}_iconOutput.jpg');
 
-    Future<void> _getFile({@required File file, @required String loc}) async {
+    Future<void> _getFile({
+      @required File file,
+      @required String loc,
+    }) async {
       if (!file.existsSync()) {
         file.createSync();
         await _stoRef.child(loc).writeToFile(file).future;
       }
     }
 
-    Future<void> _getOutputs({
-      @required File file,
-      @required String loc,
-    }) async {
-      if (data.isDone) {
-        //* add method to get multiple outputs
-        if (!file.existsSync()) {
-          file.createSync();
-          await _stoRef.child(loc).writeToFile(file).future;
-        }
-      } else {
-        print('process is not done.');
-      }
-    }
+    iconContentFile =
+        File('${tempDir.path}/${data.uid}${data.processName}_iconContent.jpg');
+    iconStyleFile =
+        File('${tempDir.path}/${data.uid}${data.processName}_iconStyle.jpg');
 
-    await Future.wait([
+    getOps.addAll([
       _getFile(file: iconContentFile, loc: data.locIconContent),
       _getFile(file: iconStyleFile, loc: data.locIconStyle),
-      // _getOutputs(file: iconOutputFile, loc: data.locOutput)
-    ]).then((_) {});
+    ]);
+
+    if (data.isProcessed) {
+      data.locOutputs.forEach((key, value) {
+        List<String> outputNameList = value.split('/').toList();
+        String outputName = outputNameList[outputNameList.length - 1];
+        File tempFile =
+            File('${tempDir.path}/${data.uid}${data.processName}_$outputName');
+        iconOutputFiles.add(tempFile);
+        getOps.add(_getFile(file: tempFile, loc: value));
+      });
+    }
+
+    await Future.wait(getOps).then((_) {});
   }
 
   _startProcess({@required OutputData data}) {
     //* update hasUnprocessedFlag
+    //TODO: update start date
     Firestore.instance
         .collection('images')
         .document(data.uid)
@@ -114,6 +114,9 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
         .document(data.uid)
         .collection('process')
         .document(data.processName)
-        .updateData({'runOnUpload': true});
+        .updateData({
+      'runOnUpload': true,
+      'startDate': DateTime.now(),
+    });
   }
 }
