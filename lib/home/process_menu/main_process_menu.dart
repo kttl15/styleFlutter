@@ -142,12 +142,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
                       fontSize: 18,
                     ),
                   ),
-                  Text(
-                    'isProcessed: ${widget._data.isProcessed}',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
+                  SizedBox(height: 10),
                   if (state is ImageDownloadedState && widget._data.isProcessed)
                     _outputWidget()
                   else
@@ -163,8 +158,17 @@ class _ProcessMenuState extends State<ProcessMenu> {
 
   Widget _outputWidget() {
     List<Widget> list = List<Widget>();
+    int i = 1;
+    iconOutputFiles.sort((a, b) => a.path.compareTo(b.path));
     iconOutputFiles.forEach((element) {
       list.add(Image.file(element));
+      list.add(SizedBox(height: 10));
+      list.add(Text(
+        'Output $i',
+        style: TextStyle(fontSize: 16),
+      ));
+      list.add(SizedBox(height: 10));
+      i++;
     });
     return Column(children: list);
   }
