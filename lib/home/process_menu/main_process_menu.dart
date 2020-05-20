@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gan2/home/process_menu/bloc/processMenu_bloc.dart';
 import 'package:gan2/model/data.dart';
+import 'package:path_provider/path_provider.dart' as pPath;
 
 class ProcessMenu extends StatefulWidget {
   final OutputData _data;
@@ -55,7 +56,10 @@ class _ProcessMenuState extends State<ProcessMenu> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Process Name: ${widget._data.processName}'),
+            title: Text(
+              'Process Name: ${widget._data.processName}',
+              style: Theme.of(context).textTheme.headline1,
+            ),
           ),
           body: SingleChildScrollView(
             child: Container(
@@ -86,7 +90,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
                             Expanded(
                               child: Center(
                                   child: Text(
-                                'Content',
+                                'Content Image',
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -95,7 +99,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
                             Expanded(
                               child: Center(
                                   child: Text(
-                                'Style',
+                                'Style Image',
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -160,16 +164,71 @@ class _ProcessMenuState extends State<ProcessMenu> {
     List<Widget> list = List<Widget>();
     int i = 1;
     iconOutputFiles.sort((a, b) => a.path.compareTo(b.path));
-    iconOutputFiles.forEach((element) {
-      list.add(Image.file(element));
+    iconOutputFiles.forEach((File file) {
+      list.add(FlatButton(
+        onLongPress: () {
+          print('a');
+          _showLongPressOptions(file: file);
+        },
+        onPressed: null,
+        child: Image.file(file),
+      ));
       list.add(SizedBox(height: 10));
       list.add(Text(
         'Output $i',
         style: TextStyle(fontSize: 16),
       ));
+      list.add(Text(file.path.split('_')[2]));
       list.add(SizedBox(height: 10));
       i++;
     });
     return Column(children: list);
+  }
+
+  void _saveFile(File file) async {
+    final Directory saveDir = await pPath.getExternalStorageDirectory();
+    final File savePath = File('${saveDir.path}/${widget._data.processName}_' +
+        file.path.split('_')[2]);
+    print(savePath.path);
+    savePath.writeAsBytes(await file.readAsBytes());
+    print('saved');
+  }
+
+  void _showLongPressOptions({@required File file}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          children: <Widget>[
+            Container(
+              color: Colors.grey[200],
+              height: 40,
+              child: FlatButton(
+                child: Text(
+                  'Download Image',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                onPressed: () {
+                  _saveFile(file);
+                },
+              ),
+            ),
+            Container(
+              color: Colors.grey[200],
+              height: 40,
+              child: FlatButton(
+                child: Text(
+                  'Share Image',
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                onPressed: () {
+                  print('a');
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

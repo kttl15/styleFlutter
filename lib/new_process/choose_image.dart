@@ -14,7 +14,7 @@ class _ChooseImageState extends State<ChooseImage> {
 
   Future<void> _cropImage(File _image) async {
     File _croppedImage = await ImageCropper.cropImage(
-      compressFormat: ImageCompressFormat.png,
+      compressFormat: ImageCompressFormat.jpg,
       sourcePath: _image.path,
       androidUiSettings: AndroidUiSettings(
           toolbarColor: Colors.purple,
