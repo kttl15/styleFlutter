@@ -25,7 +25,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
   bool showUploadingSnackBar = true;
   bool _uploadRadioButton = true;
   bool _uploadLoading = false;
-  bool _validProcessName = true;
+  bool _isProcessNameUsed = false;
 
   Future<File> _chooseImage(BuildContext context) async {
     return await Navigator.push(
@@ -42,6 +42,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
   }
 
   void _onUpload() async {
+    //* upload images and data
     setState(() {
       _uploadLoading = true;
     });
@@ -102,6 +103,10 @@ class _NewProcessFormState extends State<NewProcessForm> {
     );
   }
 
+  bool _isValidProcessChar(String val) {
+    return RegExp(r'^[a-zA-Z0-9]*$').hasMatch(val);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<UploadBloc, UploadState>(
@@ -115,11 +120,11 @@ class _NewProcessFormState extends State<NewProcessForm> {
             showUploadingSnackBar = false;
           });
         }
-        if (state is InvalidProcessName) {
+        if (state is ProcessNameUsedState) {
           _showSnackBar(text: 'Invalid Process Name');
           setState(() {
             _uploadLoading = false;
-            _validProcessName = false;
+            _isProcessNameUsed = true;
           });
           BlocProvider.of<UploadBloc>(context).add(RevertToInit());
         }
@@ -132,19 +137,20 @@ class _NewProcessFormState extends State<NewProcessForm> {
               children: <Widget>[
                 TextFormField(
                   autovalidate: true,
-                  validator: (val) {
+                  validator: (String val) {
                     //TODO: implement a more robust validator
-                    if (!_validProcessName) {
+                    if (_isProcessNameUsed) {
                       return 'You already have this process name. Please choose another.';
-                    } else {
-                      return val.length <= 3
-                          ? 'Enter A Valid Process Name'
-                          : null;
-                    }
+                    } else if (!_isValidProcessChar(val)) {
+                      return 'Invalid Character Entered';
+                    } else if (val.length <= 3) {
+                      return 'Enter A Process Name of Length >= 4';
+                    } else
+                      return null;
                   },
                   onChanged: (val) {
                     setState(() {
-                      _validProcessName = true;
+                      _isProcessNameUsed = false;
                       _processName = val.trim();
                     });
                   },
@@ -334,7 +340,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                 SizedBox(
                   height: 20,
                 ),
-                if (state is Initial || state is InvalidProcessName)
+                if (state is Initial || state is ProcessNameUsedState)
                   if (_uploadLoading)
                     //TODO: optimise
                     Container(
@@ -369,6 +375,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                       Navigator.pop(context);
                     },
                   ),
+                SizedBox(height: 100)
               ],
             ),
           );
