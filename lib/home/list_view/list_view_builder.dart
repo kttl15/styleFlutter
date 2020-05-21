@@ -66,25 +66,36 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                         child: Container(
                           height: 100,
-                          color: Colors.lightBlue[200],
-                          child: Center(
-                            child: MultiBlocProvider(
-                              providers: [
-                                BlocProvider(
-                                  create: (context) => ProcessMenuBloc(),
+                          // color: Theme.of(context).accentColor,
+                          child: Column(
+                            children: <Widget>[
+                              Center(
+                                child: MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) => ProcessMenuBloc(),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => ListViewBloc(),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => ProcessTileBloc(),
+                                    )
+                                  ],
+                                  child: ProcessTile(
+                                    data: state.data[index],
+                                    key:
+                                        ValueKey(state.data[index].processName),
+                                  ),
                                 ),
-                                BlocProvider(
-                                  create: (context) => ListViewBloc(),
-                                ),
-                                BlocProvider(
-                                  create: (context) => ProcessTileBloc(),
-                                )
-                              ],
-                              child: ProcessTile(
-                                data: state.data[index],
-                                key: ValueKey(state.data[index].processName),
                               ),
-                            ),
+                              Divider(
+                                indent: 16,
+                                endIndent: 16,
+                                color: Colors.grey[200],
+                                thickness: 1,
+                              ),
+                            ],
                           ),
                         ),
                       );

@@ -3,16 +3,21 @@ import 'package:flutter/material.dart';
 class AppTheme {
   ThemeData themeData() {
     return ThemeData(
-      primaryColor: Colors.blue[400],
+      fontFamily: 'Montserrat',
+      primaryColor: Colors.teal[400],
+      accentColor: Colors.amber[100],
+      buttonColor: Colors.teal[400],
       textTheme: TextTheme(
         headline1: TextStyle(
-          fontSize: 20,
           color: Colors.white,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w400,
+          fontSize: 25,
         ),
-        bodyText1: TextStyle(
-          fontSize: 16,
-        ),
+        headline3: TextStyle(fontSize: 25),
+        headline4: TextStyle(fontSize: 20),
+        headline5: TextStyle(fontSize: 18),
+        bodyText1: TextStyle(fontSize: 16),
+        subtitle1: TextStyle(fontSize: 15),
       ),
     );
   }

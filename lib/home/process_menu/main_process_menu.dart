@@ -210,6 +210,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
                 ),
                 onPressed: () {
                   _saveFile(file);
+                  Navigator.pop(context);
                 },
               ),
             ),
@@ -222,12 +223,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 onPressed: () {
-                  Scaffold.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(SnackBar(
-                      content: Text('Share'),
-                      duration: Duration(seconds: 1),
-                    ));
+                  Navigator.pop(context);
                 },
               ),
             ),

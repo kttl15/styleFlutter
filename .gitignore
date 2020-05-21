@@ -35,3 +35,21 @@ lib/generated_plugin_registrant.dart
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+lib/fonts/Montserrat-Black.ttf
+lib/fonts/Montserrat-BlackItalic.ttf
+lib/fonts/Montserrat-Bold.ttf
+lib/fonts/Montserrat-BoldItalic.ttf
+lib/fonts/Montserrat-ExtraBold.ttf
+lib/fonts/Montserrat-ExtraBoldItalic.ttf
+lib/fonts/Montserrat-ExtraLight.ttf
+lib/fonts/Montserrat-ExtraLightItalic.ttf
+lib/fonts/Montserrat-Italic.ttf
+lib/fonts/Montserrat-Light.ttf
+lib/fonts/Montserrat-LightItalic.ttf
+lib/fonts/Montserrat-Medium.ttf
+lib/fonts/Montserrat-MediumItalic.ttf
+lib/fonts/Montserrat-Regular.ttf
+lib/fonts/Montserrat-SemiBold.ttf
+lib/fonts/Montserrat-SemiBoldItalic.ttf
+lib/fonts/Montserrat-Thin.ttf
+lib/fonts/Montserrat-ThinItalic.ttf

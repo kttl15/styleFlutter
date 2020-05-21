@@ -18,7 +18,10 @@ class _AddNewProcessState extends State<AddNewProcess> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add A New Process'),
+        title: Text(
+          'Add A New Process',
+          style: Theme.of(context).textTheme.headline1,
+        ),
       ),
       body: Center(
         child: MultiBlocProvider(

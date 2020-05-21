@@ -21,7 +21,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
   String _processName = '';
   double _contentWeight = 1;
   double _styleWeight = 1;
-  String _epoch = '1';
+  String _epoch;
   bool showUploadingSnackBar = true;
   bool _uploadRadioButton = true;
   bool _uploadLoading = false;
@@ -99,16 +99,23 @@ class _NewProcessFormState extends State<NewProcessForm> {
               context: context,
               builder: (content) {
                 return AlertDialog(
-                  title: Text('Info'),
-                  content: Text(toolTip),
+                  title: Text('Info',
+                      style: Theme.of(context).textTheme.headline3),
+                  content: Text(
+                    toolTip,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
                 );
               });
         },
         child: Text(
           text,
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-          ),
+          softWrap: true,
+          textAlign: TextAlign.center,
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1
+              .copyWith(fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -143,257 +150,314 @@ class _NewProcessFormState extends State<NewProcessForm> {
       child: BlocBuilder<UploadBloc, UploadState>(
         builder: (context, state) {
           return Padding(
-            padding: EdgeInsets.fromLTRB(30, 100, 30, 0),
-            child: ListView(
-              children: <Widget>[
-                TextFormField(
-                  autovalidate: true,
-                  enabled: !_uploadLoading,
-                  validator: (String val) {
-                    val = val.trim();
-                    //TODO: implement a more robust validator
-                    if (_isProcessNameUsed) {
-                      return 'You already have this process name. Please choose another.';
-                    } else if (!_isValidProcessChar(val)) {
-                      return 'Invalid Character Entered';
-                    } else if (val.length <= 3) {
-                      return 'Enter A Process Name of Length >= 4';
-                    } else
-                      return null;
-                  },
-                  onChanged: (String val) {
-                    setState(() {
-                      _isProcessNameUsed = false;
-                      _processName = val.trim();
-                    });
-                  },
-                  decoration: InputDecoration(hintText: 'Enter a Process Name'),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  color: Colors.grey[300],
-                  height: 80,
-                  child: Center(
-                    child: ListTile(
-                      enabled: !_uploadLoading,
-                      leading: _contentImage != null
-                          ? Image.file(_contentImage)
-                          : Icon(Icons.image),
-                      title: Text(
-                        'Content Image',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      onTap: () async {
-                        _looseKeyboardFocus();
-                        File result = await _chooseImage(context);
-                        if (result != null) {
-                          setState(() {
-                            _contentImage = result;
-                          });
-                        }
-                      },
-                    ),
+            padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  color: Colors.grey[300],
-                  height: 80,
-                  child: Center(
-                    child: ListTile(
-                      enabled: !_uploadLoading,
-                      leading: _styleImage != null
-                          ? Image.file(_styleImage)
-                          : Icon(Icons.image),
-                      title: Text(
-                        'Style Image',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      onTap: () async {
-                        _looseKeyboardFocus();
-                        File result = await _chooseImage(context);
-                        if (result != null) {
-                          setState(() {
-                            _styleImage = result;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: <Widget>[
-                    _customText(
-                        text: 'Content Weight: ',
-                        toolTip:
-                            'Determines how much of the content image is used.'),
-                    Expanded(
-                      child: SliderTheme(
-                        data: SliderThemeData(),
-                        child: Slider(
-                          label: _contentWeight.round().toString(),
-                          divisions: 9,
-                          min: 1,
-                          max: 10,
-                          activeColor: Colors.cyan,
-                          inactiveColor: Colors.blue,
-                          value: _contentWeight,
-                          onChanged: (val) {
-                            setState(() {
-                              _contentWeight = val;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    _customText(
-                        text: 'Style Weight: ',
-                        toolTip:
-                            'Determines how much of the style image is used.'),
-                    Expanded(
-                      child: SliderTheme(
-                        data: SliderThemeData(),
-                        child: Slider(
-                          label: _styleWeight.round().toString(),
-                          divisions: 9,
-                          min: 1,
-                          max: 10,
-                          activeColor: Colors.cyan,
-                          inactiveColor: Colors.blue,
-                          value: _styleWeight,
-                          onChanged: (val) {
-                            setState(() {
-                              _styleWeight = val;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    _customText(
-                        text: 'Duration: ',
-                        toolTip:
-                            'Determines how long the process is carried out.'),
-                    Expanded(
-                      child: TextFormField(
-                        enabled: !_uploadLoading,
-                        keyboardType: TextInputType.number,
-                        autovalidate: true,
-                        decoration: InputDecoration(
-                            hintText: "Enter a Duration from 1 - 20"),
-                        validator: (val) {
-                          if (!_validateEpoch())
-                            return "Invalid Input";
-                          else
-                            return null;
-                        },
-                        onChanged: (String val) {
-                          setState(() {
-                            _epoch = val;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    _customText(
-                        text: 'Run On Upload?',
-                        toolTip:
-                            'Determines whether or not to run the process automatically after uploading.'),
-                    Expanded(
-                      child: ListTile(
-                        leading: Radio(
-                          value: true,
-                          groupValue: _uploadRadioButton,
-                          onChanged: (val) {
-                            setState(() {
-                              _uploadRadioButton = val;
-                            });
-                          },
-                        ),
-                        title: Text(
-                          'Yes',
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: ListTile(
-                        leading: Radio(
-                          value: false,
-                          groupValue: _uploadRadioButton,
-                          onChanged: (val) {
-                            setState(() {
-                              _uploadRadioButton = val;
-                            });
-                          },
-                        ),
-                        title: Text(
-                          'No',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                if (state is Initial || state is ProcessNameUsedState)
-                  if (_uploadLoading)
-                    //TODO: optimise
-                    Container(
-                      width: 20,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  else
-                    UploadButton(
-                      onPressed: _validateUploadState() ? _onUpload : null,
-                    )
-                else if (state is InProgress)
-                  Column(
-                    children: <Widget>[
-                      LinearProgressIndicator(
-                        value: state.progressPct(),
-                      ),
-                      Text('Progress: ${state.progressPct()}'),
-                      Text('State: ${state.progressState()}'),
-                    ],
-                  )
-                else if (state is Completed)
-                  RaisedButton(
-                    color: Colors.green[200],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text('Done'),
-                    onPressed: () {
-                      // BlocProvider.of<ListViewBloc>(context).add(RefreshData());
-                      Navigator.pop(context);
+                  TextFormField(
+                    autovalidate: true,
+                    enabled: !_uploadLoading,
+                    validator: (String val) {
+                      val = val.trim();
+                      //TODO: implement a more robust validator
+                      if (_isProcessNameUsed) {
+                        return 'You already have this process name. Please choose another.';
+                      } else if (!_isValidProcessChar(val)) {
+                        return 'Invalid Character Entered';
+                      } else if (val.length <= 3) {
+                        return 'Enter a Process Name of Length >= 4';
+                      } else
+                        return null;
                     },
+                    onChanged: (String val) {
+                      setState(() {
+                        _isProcessNameUsed = false;
+                        _processName = val.trim();
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter a Process Name',
+                      hintStyle: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontWeight: FontWeight.w300,
+                          ),
+                    ),
                   ),
-                SizedBox(height: 100)
-              ],
+                  Divider(
+                    indent: 32,
+                    endIndent: 32,
+                    color: Colors.grey[200],
+                    thickness: 1,
+                    height: 40,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).accentColor,
+                    ),
+                    height: 80,
+                    child: Center(
+                      child: ListTile(
+                        enabled: !_uploadLoading,
+                        leading: _contentImage != null
+                            ? Image.file(
+                                _contentImage,
+                                width: 80,
+                              )
+                            : Container(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 60,
+                                ),
+                                width: 80,
+                              ),
+                        title: Text(
+                          'Content Image',
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        onTap: () async {
+                          _looseKeyboardFocus();
+                          File result = await _chooseImage(context);
+                          if (result != null) {
+                            setState(() {
+                              _contentImage = result;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).accentColor,
+                    ),
+                    height: 80,
+                    child: Center(
+                      child: ListTile(
+                        enabled: !_uploadLoading,
+                        leading: _styleImage != null
+                            ? Image.file(
+                                _styleImage,
+                                width: 80,
+                              )
+                            : Container(
+                                width: 80,
+                                child: Icon(
+                                  Icons.image,
+                                  size: 60,
+                                ),
+                              ),
+                        title: Text(
+                          'Style Image',
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        onTap: () async {
+                          _looseKeyboardFocus();
+                          File result = await _chooseImage(context);
+                          if (result != null) {
+                            setState(() {
+                              _styleImage = result;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Divider(
+                    indent: 32,
+                    endIndent: 32,
+                    color: Colors.grey[200],
+                    thickness: 1,
+                    height: 20,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      _customText(
+                          text: 'Content Weight: ',
+                          toolTip:
+                              'Determines how much of the content image is used.'),
+                      Expanded(
+                        child: SliderTheme(
+                          data: SliderThemeData(),
+                          child: Slider(
+                            label: _contentWeight.round().toString(),
+                            divisions: 9,
+                            min: 1,
+                            max: 10,
+                            activeColor: Colors.blue,
+                            inactiveColor: Colors.blue,
+                            value: _contentWeight,
+                            onChanged: (val) {
+                              setState(() {
+                                _contentWeight = val;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      _customText(
+                          text: 'Style Weight: ',
+                          toolTip:
+                              'Determines how much of the style image is used.'),
+                      Expanded(
+                        child: SliderTheme(
+                          data: SliderThemeData(),
+                          child: Slider(
+                            label: _styleWeight.round().toString(),
+                            divisions: 9,
+                            min: 1,
+                            max: 10,
+                            activeColor: Colors.blue,
+                            inactiveColor: Colors.blue,
+                            value: _styleWeight,
+                            onChanged: (val) {
+                              setState(() {
+                                _styleWeight = val;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      _customText(
+                          text: 'Duration: ',
+                          toolTip:
+                              'Determines how long the process is carried out.'),
+                      Expanded(
+                        child: TextFormField(
+                          enabled: !_uploadLoading,
+                          keyboardType: TextInputType.number,
+                          autovalidate: true,
+                          decoration: InputDecoration(
+                            hintText: "Enter a Duration from 1 - 20",
+                            hintStyle:
+                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                          ),
+                          validator: (val) {
+                            if (val == '') return 'Please Enter a Duration';
+                            if (!_validateEpoch())
+                              return "Invalid Input";
+                            else
+                              return null;
+                          },
+                          onChanged: (String val) {
+                            setState(() {
+                              _epoch = val;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      _customText(
+                          text: 'Run On Upload?',
+                          toolTip:
+                              'Determines whether or not to run the process automatically after uploading.'),
+                      Expanded(
+                        child: ListTile(
+                          leading: Radio(
+                            value: true,
+                            groupValue: _uploadRadioButton,
+                            onChanged: (val) {
+                              setState(() {
+                                _uploadRadioButton = val;
+                              });
+                            },
+                          ),
+                          title: Text(
+                            'Yes',
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListTile(
+                          leading: Radio(
+                            value: false,
+                            groupValue: _uploadRadioButton,
+                            onChanged: (val) {
+                              setState(() {
+                                _uploadRadioButton = val;
+                              });
+                            },
+                          ),
+                          title: Text(
+                            'No',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    indent: 32,
+                    endIndent: 32,
+                    color: Colors.grey[200],
+                    thickness: 1,
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (state is Initial || state is ProcessNameUsedState)
+                    if (_uploadLoading)
+                      Container(
+                        width: 40,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    else
+                      Container(
+                        width: 150,
+                        child: UploadButton(
+                          onPressed: _validateUploadState() ? _onUpload : null,
+                        ),
+                      )
+                  else if (state is InProgress)
+                    Column(
+                      children: <Widget>[
+                        LinearProgressIndicator(
+                          value: state.progressPct(),
+                        ),
+                        Text('Progress: ${state.progressPct()}'),
+                        Text('State: ${state.progressState()}'),
+                      ],
+                    )
+                  else if (state is Completed)
+                    RaisedButton(
+                      color: Colors.green[200],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text('Done'),
+                      onPressed: () {
+                        // BlocProvider.of<ListViewBloc>(context).add(RefreshData());
+                        Navigator.pop(context);
+                      },
+                    ),
+                  SizedBox(height: 100)
+                ],
+              ),
             ),
           );
         },

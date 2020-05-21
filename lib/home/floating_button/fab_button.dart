@@ -10,8 +10,8 @@ class FAB extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       child: Icon(Icons.add),
-      backgroundColor: Colors.cyan,
-      splashColor: Colors.green,
+      backgroundColor: Theme.of(context).buttonColor,
+      // splashColor: Colors.green,
       tooltip: 'Add',
       onPressed: () {
         Navigator.of(context).push(

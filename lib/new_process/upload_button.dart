@@ -12,7 +12,7 @@ class UploadButton extends StatelessWidget {
     return RaisedButton.icon(
         icon: Icon(Icons.cloud_upload),
         label: Text('Upload'),
-        color: Colors.blue[300],
+        color: Colors.green[300],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         onPressed: _onPressed);
   }

@@ -48,8 +48,14 @@ class _ProcessTileState extends State<ProcessTile> {
       builder: (context, state) {
         return ListTile(
           key: ValueKey(widget.key),
-          title: Text('Process Name: ' + widget._data.processName),
-          subtitle: Text('isProcessed: ${widget._data.isProcessed}'),
+          title: Text(
+            'Process Name: ' + widget._data.processName,
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          subtitle: Text(
+            'isProcessed: ${widget._data.isProcessed}',
+            style: Theme.of(context).textTheme.subtitle1,
+          ),
           leading: state is OutputImageDownloadedState && iconOutputFile != null
               ? Image.file(
                   iconOutputFile,
@@ -85,7 +91,10 @@ class _ProcessTileState extends State<ProcessTile> {
       itemBuilder: (BuildContext content) {
         return <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
-            child: Text('Delete Process'),
+            child: Text(
+              'Delete Process',
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
             value: 'delete',
           ),
           if (widget._data.runOnUpload == false)
