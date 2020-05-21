@@ -16,7 +16,7 @@ class Uploader {
     @required File image,
     @required bool isContent,
     bool runOnUpload,
-    double epoch,
+    int epoch,
     double styleWeight,
     double contentWeight,
   }) async* {
@@ -26,10 +26,10 @@ class Uploader {
     final Directory tempDir = Directory.systemTemp;
     File iconFile;
 
-    if (image.readAsBytesSync().lengthInBytes >= 500000) {
+    if (image.readAsBytesSync().lengthInBytes >= 300000) {
       var iconImage = decodeImage(image.readAsBytesSync());
       var icon;
-      print([iconImage.width, iconImage.height]);
+      // print([iconImage.width, iconImage.height]);
       if (iconImage.width > iconImage.height) {
         icon = copyResize(iconImage, width: 500);
       } else {

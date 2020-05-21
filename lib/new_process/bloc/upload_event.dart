@@ -15,7 +15,7 @@ class StartUpload extends UploadEvent {
   final File styleFile;
   final double styleWeight;
   final double contentWeight;
-  final double epoch;
+  final int epoch;
   final bool runOnUpload;
 
   StartUpload({

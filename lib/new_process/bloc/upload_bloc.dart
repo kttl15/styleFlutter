@@ -66,7 +66,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     @required File styleFile,
     @required double styleWeight,
     @required double contentWeight,
-    @required double epoch,
+    @required int epoch,
     @required bool runOnUpload,
   }) {
     Uploader upload1 = Uploader();
