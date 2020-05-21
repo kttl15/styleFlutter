@@ -21,7 +21,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
   String _processName = '';
   double _contentWeight = 1;
   double _styleWeight = 1;
-  double _epoch = 1;
+  String _epoch = '1';
   bool showUploadingSnackBar = true;
   bool _uploadRadioButton = true;
   bool _uploadLoading = false;
@@ -54,16 +54,27 @@ class _NewProcessFormState extends State<NewProcessForm> {
       styleFile: _styleImage,
       contentWeight: _contentWeight,
       styleWeight: _styleWeight,
-      epoch: _epoch,
+      epoch: int.parse(_epoch),
       runOnUpload: _uploadRadioButton,
     ));
   }
 
-  bool _validUploadState() {
+  bool _validateUploadState() {
     //* ensures that process name and both images are present
     return _processName.length >= 4 &&
         _styleImage != null &&
-        _contentImage != null;
+        _contentImage != null &&
+        _validateEpoch();
+  }
+
+  bool _validateEpoch() {
+    if (_epoch != '' &&
+        RegExp(r'^[0-9]*$').hasMatch(_epoch.toString()) &&
+        int.parse(_epoch) >= 1 &&
+        int.parse(_epoch) <= 20)
+      return true;
+    else
+      return false;
   }
 
   ScaffoldState _showSnackBar({String text}) {
@@ -71,7 +82,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
         content: Text(text),
-        duration: Duration(seconds: 2),
+        duration: Duration(seconds: 1),
       ));
   }
 
@@ -104,7 +115,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
   }
 
   bool _isValidProcessChar(String val) {
-    return RegExp(r'^[a-zA-Z0-9]*$').hasMatch(val);
+    return RegExp(r'^[a-zA-Z0-9\s]*$').hasMatch(val);
   }
 
   @override
@@ -137,7 +148,9 @@ class _NewProcessFormState extends State<NewProcessForm> {
               children: <Widget>[
                 TextFormField(
                   autovalidate: true,
+                  enabled: !_uploadLoading,
                   validator: (String val) {
+                    val = val.trim();
                     //TODO: implement a more robust validator
                     if (_isProcessNameUsed) {
                       return 'You already have this process name. Please choose another.';
@@ -148,7 +161,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                     } else
                       return null;
                   },
-                  onChanged: (val) {
+                  onChanged: (String val) {
                     setState(() {
                       _isProcessNameUsed = false;
                       _processName = val.trim();
@@ -164,6 +177,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                   height: 80,
                   child: Center(
                     child: ListTile(
+                      enabled: !_uploadLoading,
                       leading: _contentImage != null
                           ? Image.file(_contentImage)
                           : Icon(Icons.image),
@@ -193,6 +207,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                   height: 80,
                   child: Center(
                     child: ListTile(
+                      enabled: !_uploadLoading,
                       leading: _styleImage != null
                           ? Image.file(_styleImage)
                           : Icon(Icons.image),
@@ -275,24 +290,26 @@ class _NewProcessFormState extends State<NewProcessForm> {
                   children: <Widget>[
                     _customText(
                         text: 'Duration: ',
-                        toolTip: 'Determines how long training is done.'),
+                        toolTip:
+                            'Determines how long the process is carried out.'),
                     Expanded(
-                      child: SliderTheme(
-                        data: SliderThemeData(),
-                        child: Slider(
-                          label: _epoch.round().toString(),
-                          divisions: 9,
-                          min: 1,
-                          max: 10,
-                          activeColor: Colors.cyan,
-                          inactiveColor: Colors.blue,
-                          value: _epoch,
-                          onChanged: (val) {
-                            setState(() {
-                              _epoch = val;
-                            });
-                          },
-                        ),
+                      child: TextFormField(
+                        enabled: !_uploadLoading,
+                        keyboardType: TextInputType.number,
+                        autovalidate: true,
+                        decoration: InputDecoration(
+                            hintText: "Enter a Duration from 1 - 20"),
+                        validator: (val) {
+                          if (!_validateEpoch())
+                            return "Invalid Input";
+                          else
+                            return null;
+                        },
+                        onChanged: (String val) {
+                          setState(() {
+                            _epoch = val;
+                          });
+                        },
                       ),
                     ),
                   ],
@@ -351,7 +368,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                     )
                   else
                     UploadButton(
-                      onPressed: _validUploadState() ? _onUpload : null,
+                      onPressed: _validateUploadState() ? _onUpload : null,
                     )
                 else if (state is InProgress)
                   Column(
