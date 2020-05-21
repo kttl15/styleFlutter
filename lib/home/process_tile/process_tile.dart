@@ -1,9 +1,7 @@
 import 'dart:io';
 
-// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:gan2/home/list_view/bloc/listview_bloc.dart';
 import 'package:gan2/home/process_menu/bloc/processMenu_bloc.dart';
 import 'package:gan2/home/process_menu/main_process_menu.dart';
 import 'package:gan2/home/process_tile/bloc/processtile_bloc.dart';
@@ -36,6 +34,7 @@ class _ProcessTileState extends State<ProcessTile> {
 
   @override
   Widget build(BuildContext context) {
+    final double iconWidth = 100.0;
     return BlocConsumer<ProcessTileBloc, ProcessTileState>(
       listener: (context, state) {
         if (state is OutputImageDownloadedState) {
@@ -54,10 +53,10 @@ class _ProcessTileState extends State<ProcessTile> {
           leading: state is OutputImageDownloadedState && iconOutputFile != null
               ? Image.file(
                   iconOutputFile,
-                  width: 60,
+                  width: iconWidth,
                 )
               : SizedBox(
-                  width: 60,
+                  width: iconWidth,
                   child: Icon(
                     Icons.image,
                     size: 60,

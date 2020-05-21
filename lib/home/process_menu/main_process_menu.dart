@@ -222,7 +222,12 @@ class _ProcessMenuState extends State<ProcessMenu> {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 onPressed: () {
-                  print('a');
+                  Scaffold.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: Text('Share'),
+                      duration: Duration(seconds: 1),
+                    ));
                 },
               ),
             ),

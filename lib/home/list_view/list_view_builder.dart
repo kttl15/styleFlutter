@@ -63,7 +63,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     itemCount: state.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                         child: Container(
                           height: 100,
                           color: Colors.lightBlue[200],
