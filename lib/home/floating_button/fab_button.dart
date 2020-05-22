@@ -9,7 +9,10 @@ class FAB extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      child: Icon(Icons.add),
+      child: Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
       backgroundColor: Theme.of(context).buttonColor,
       // splashColor: Colors.green,
       tooltip: 'Add',

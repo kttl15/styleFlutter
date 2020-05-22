@@ -57,6 +57,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                 );
               } else {
                 return RefreshIndicator(
+                  color: Theme.of(context).primaryColor,
                   onRefresh: _onRefresh,
                   child: ListView.builder(
                     reverse: false,
@@ -117,7 +118,9 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            CircularProgressIndicator(),
+            CircularProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
             SizedBox(height: 10),
             Text('Loading'),
           ],
