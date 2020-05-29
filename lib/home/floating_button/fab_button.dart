@@ -4,8 +4,10 @@ import 'package:gan2/new_process/add_new_process.dart';
 
 class FAB extends StatelessWidget {
   final FirebaseUser user;
+  final double textScale;
 
-  const FAB({Key key, @required this.user}) : super(key: key);
+  const FAB({Key key, @required this.user, @required this.textScale})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -19,7 +21,10 @@ class FAB extends StatelessWidget {
       onPressed: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AddNewProcess(user: user),
+            builder: (context) => AddNewProcess(
+              user: user,
+              textScale: textScale,
+            ),
           ),
         );
       },

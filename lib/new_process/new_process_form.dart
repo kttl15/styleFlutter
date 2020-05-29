@@ -9,8 +9,10 @@ import 'package:gan2/new_process/upload_button.dart';
 
 class NewProcessForm extends StatefulWidget {
   final FirebaseUser user;
+  final double textScale;
 
-  const NewProcessForm({Key key, @required this.user}) : super(key: key);
+  const NewProcessForm({Key key, @required this.user, @required this.textScale})
+      : super(key: key);
   @override
   _NewProcessFormState createState() => _NewProcessFormState();
 }
@@ -99,10 +101,14 @@ class _NewProcessFormState extends State<NewProcessForm> {
               context: context,
               builder: (content) {
                 return AlertDialog(
-                  title: Text('Info',
-                      style: Theme.of(context).textTheme.headline3),
+                  title: Text(
+                    'Info',
+                    textScaleFactor: widget.textScale,
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
                   content: Text(
                     toolTip,
+                    textScaleFactor: widget.textScale,
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 );
@@ -110,6 +116,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
         },
         child: Text(
           text,
+          textScaleFactor: widget.textScale,
           softWrap: true,
           textAlign: TextAlign.center,
           style: Theme.of(context)

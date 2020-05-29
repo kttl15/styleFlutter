@@ -9,8 +9,9 @@ import 'package:gan2/model/data.dart';
 
 class ProcessTile extends StatefulWidget {
   final OutputData _data;
+  final double textScale;
 
-  const ProcessTile({Key key, @required data})
+  const ProcessTile({Key key, @required data, @required this.textScale})
       : assert(data != null),
         _data = data,
         super(key: key);
@@ -74,7 +75,10 @@ class _ProcessTileState extends State<ProcessTile> {
               builder: ((context) {
                 return BlocProvider<ProcessMenuBloc>(
                   create: (context) => ProcessMenuBloc(),
-                  child: ProcessMenu(data: widget._data),
+                  child: ProcessMenu(
+                    data: widget._data,
+                    textScale: widget.textScale,
+                  ),
                 );
               }),
             ));

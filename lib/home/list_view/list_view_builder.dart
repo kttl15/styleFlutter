@@ -8,6 +8,9 @@ import 'package:gan2/home/process_tile/process_tile.dart';
 class ListViewBuilder extends StatefulWidget {
   //TODO switch between list and grid view
   //TODO: popup options menu on long press
+  final double textScale;
+
+  const ListViewBuilder({Key key, @required this.textScale}) : super(key: key);
 
   @override
   _ListViewBuilderState createState() => _ListViewBuilderState();
@@ -85,6 +88,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   ],
                                   child: ProcessTile(
                                     data: state.data[index],
+                                    textScale: widget.textScale,
                                     key:
                                         ValueKey(state.data[index].processName),
                                   ),

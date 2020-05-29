@@ -8,43 +8,102 @@ import 'package:gan2/home/list_view/bloc/listview_bloc.dart';
 import 'package:gan2/home/list_view/list_view_builder.dart';
 // import 'package:gan2/new_process/bloc/upload_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final FirebaseUser user;
 
   const HomeScreen({Key key, this.user}) : super(key: key);
 
   @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  double textScale = 0.7;
+
+  void _changeTextScale(String val) {
+    switch (val) {
+      case 'smallFont':
+        setState(() {
+          textScale = 0.5;
+          // AppTheme().textScale = 0.5;
+        });
+        break;
+      case 'mediumFont':
+        setState(() {
+          textScale = 0.7;
+          // AppTheme().textScale = 0.5;
+        });
+        break;
+      case 'bigFont':
+        setState(() {
+          textScale = 1.0;
+          // AppTheme().textScale = 1.0;
+        });
+        break;
+      default:
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     //TODO refresh when done uploading
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Home: ' + user.email,
-          style: Theme.of(context).textTheme.headline1,
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
-            },
-          )
-        ],
-      ),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider<ListViewBloc>(
-            create: (context) => ListViewBloc()..add(FetchData()),
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(textScaleFactor: textScale),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Home: ' + widget.user.email,
+            style: Theme.of(context).textTheme.headline1,
+            textScaleFactor: textScale,
           ),
-          // BlocProvider<UploadBloc>(
-          //   create: (context) => UploadBloc(),
-          // ),
-        ],
-        child: ListViewBuilder(),
-      ),
-      floatingActionButton: BlocProvider(
-        create: (context) => FabBloc(),
-        child: FAB(user: user),
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: _changeTextScale,
+              itemBuilder: (context) {
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem(
+                    child: Text('Small'),
+                    value: 'smallFont',
+                  ),
+                  PopupMenuItem(
+                    child: Text('Medium'),
+                    value: 'mediumFont',
+                  ),
+                  PopupMenuItem(
+                    child: Text('Big'),
+                    value: 'bigFont',
+                  ),
+                ];
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () {
+                BlocProvider.of<AuthenticationBloc>(context).add(LoggedOut());
+              },
+            )
+          ],
+        ),
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider<ListViewBloc>(
+              create: (context) => ListViewBloc()..add(FetchData()),
+            ),
+            // BlocProvider<UploadBloc>(
+            //   create: (context) => UploadBloc(),
+            // ),
+          ],
+          child: ListViewBuilder(
+            textScale: textScale,
+          ),
+        ),
+        floatingActionButton: BlocProvider(
+          create: (context) => FabBloc(),
+          child: FAB(
+            user: widget.user,
+            textScale: textScale,
+          ),
+        ),
       ),
     );
   }

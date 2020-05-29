@@ -8,7 +8,8 @@ import 'package:path_provider/path_provider.dart' as pPath;
 
 class ProcessMenu extends StatefulWidget {
   final OutputData _data;
-  const ProcessMenu({Key key, data})
+  final double textScale;
+  const ProcessMenu({Key key, @required data, @required this.textScale})
       : assert(data != null),
         _data = data,
         super(key: key);
@@ -58,6 +59,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
           appBar: AppBar(
             title: Text(
               'Process Name: ${widget._data.processName}',
+              textScaleFactor: widget.textScale,
               style: Theme.of(context).textTheme.headline1,
             ),
           ),
@@ -91,6 +93,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
                               child: Center(
                                   child: Text(
                                 'Content Image',
+                                textScaleFactor: widget.textScale,
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -100,6 +103,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
                               child: Center(
                                   child: Text(
                                 'Style Image',
+                                textScaleFactor: widget.textScale,
                                 style: TextStyle(
                                   fontSize: 20,
                                 ),
@@ -124,24 +128,28 @@ class _ProcessMenuState extends State<ProcessMenu> {
                   ),
                   Text(
                     'Content Weight: ${widget._data.contentWeight.round()}',
+                    textScaleFactor: widget.textScale,
                     style: TextStyle(
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     'Style Weight: ${widget._data.styleWeight.round()}',
+                    textScaleFactor: widget.textScale,
                     style: TextStyle(
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     'Duration: ${widget._data.epoch.round()}',
+                    textScaleFactor: widget.textScale,
                     style: TextStyle(
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     'RunOnUpload: ${widget._data.runOnUpload}',
+                    textScaleFactor: widget.textScale,
                     style: TextStyle(
                       fontSize: 18,
                     ),
@@ -176,6 +184,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
       list.add(SizedBox(height: 10));
       list.add(Text(
         'Output $i',
+        textScaleFactor: widget.textScale,
         style: TextStyle(fontSize: 16),
       ));
       list.add(Text(file.path.split('_')[2]));
@@ -206,6 +215,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
               child: FlatButton(
                 child: Text(
                   'Download Image',
+                  textScaleFactor: widget.textScale,
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 onPressed: () {
@@ -220,6 +230,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
               child: FlatButton(
                 child: Text(
                   'Share Image',
+                  textScaleFactor: widget.textScale,
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 onPressed: () {
