@@ -26,6 +26,7 @@ dependencies:
   pull_to_refresh: ^1.5.8
   image: ^2.1.12
   path_provider: ^1.6.8
+  rxdart: ^0.23.0
 
 dev_dependencies:
   flutter_test:
