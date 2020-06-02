@@ -27,6 +27,7 @@ dependencies:
   image: ^2.1.12
   path_provider: ^1.6.8
   rxdart: ^0.23.0
+  flushbar: ^1.10.4
 
 dev_dependencies:
   flutter_test:

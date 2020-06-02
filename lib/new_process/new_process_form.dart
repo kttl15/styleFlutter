@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gan2/new_process/bloc/upload_bloc.dart';
@@ -79,14 +80,14 @@ class _NewProcessFormState extends State<NewProcessForm> {
       return false;
   }
 
-  ScaffoldState _showSnackBar({@required String text, int seconds}) {
-    return Scaffold.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(text),
-        duration: Duration(seconds: seconds != null ? seconds : 1),
-      ));
-  }
+  // ScaffoldState _showSnackBar({@required String text, int seconds}) {
+  //   return Scaffold.of(context)
+  //     ..hideCurrentSnackBar()
+  //     ..showSnackBar(SnackBar(
+  //       content: Text(text),
+  //       duration: Duration(seconds: seconds != null ? seconds : 1),
+  //     ));
+  // }
 
   Widget _customText({
     @required String text,
@@ -137,16 +138,28 @@ class _NewProcessFormState extends State<NewProcessForm> {
     return BlocListener<UploadBloc, UploadState>(
       listener: (context, state) {
         if (state is Completed) {
-          _showSnackBar(text: 'Done');
+          // _showSnackBar(text: 'Done');
+          Flushbar(
+            message: 'Done!',
+            duration: Duration(seconds: 2),
+          );
         }
         if (state is InProgress && showUploadingSnackBar) {
-          _showSnackBar(text: 'Uploading. Do Not Exit', seconds: 2);
+          // _showSnackBar(text: 'Uploading. Do Not Exit', seconds: 2);
+          Flushbar(
+            message: 'Uploading. Do Not Exit',
+            duration: Duration(seconds: 2),
+          );
           setState(() {
             showUploadingSnackBar = false;
           });
         }
         if (state is ProcessNameUsedState) {
-          _showSnackBar(text: 'Invalid Process Name');
+          // _showSnackBar(text: 'Invalid Process Name');
+          Flushbar(
+            message: 'Invalid Process Name',
+            duration: Duration(seconds: 2),
+          );
           setState(() {
             _uploadLoading = false;
             _isProcessNameUsed = true;
