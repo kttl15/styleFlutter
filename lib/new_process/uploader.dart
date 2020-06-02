@@ -15,6 +15,7 @@ class Uploader {
     @required String processName,
     @required File image,
     @required bool isContent,
+    @required bool isIcon,
     bool runOnUpload,
     int epoch,
     double styleWeight,
@@ -23,76 +24,88 @@ class Uploader {
     final FirebaseUser user = await UserRepo().getUser();
     final ImageStorageService _imageStorageService = ImageStorageService();
     final String uid = user.uid;
-    final Directory tempDir = Directory.systemTemp;
-    File iconFile;
-
-    if (image.readAsBytesSync().lengthInBytes >= 300000) {
-      var iconImage = decodeImage(image.readAsBytesSync());
-      var icon;
-      // print([iconImage.width, iconImage.height]);
-      if (iconImage.width > iconImage.height) {
-        icon = copyResize(iconImage, width: 500);
-      } else {
-        icon = copyResize(iconImage, height: 500);
-      }
-      File('${tempDir.path}/icon.jpg').writeAsBytesSync(encodeJpg(icon));
-      iconFile = File('${tempDir.path}/icon.jpg');
-    } else {
-      iconFile = image;
-    }
-
     String contentLoc = 'images/$uid/$processName/content.jpg';
     String iconContentLoc = 'images/$uid/$processName/iconContent.jpg';
     String styleLoc = 'images/$uid/$processName/style.jpg';
     String iconStyleLoc = 'images/$uid/$processName/iconStyle.jpg';
-    Map<String, dynamic> data;
 
-    //* set flag to indicate unprocessed data
-    await Firestore.instance
-        .collection('images')
-        .document(uid)
-        .setData({'hasUnprocessedFlag': true});
+    if (!isIcon) {
+      if (isContent) {
+        assert(contentWeight != null);
+        assert(styleWeight != null);
+        assert(epoch != null);
+        assert(runOnUpload != null);
+        Map<String, dynamic> data;
 
-    //* create process in database
-    if (createProcess) {
-      //* data for each process
-      data = {
-        'uid': uid,
-        'processName': processName,
-        'locContent': contentLoc,
-        'locIconContent': iconContentLoc,
-        'locStyle': styleLoc,
-        'locIconStyle': iconStyleLoc,
-        'locOutputs': {'1': ''},
-        'locIconOutputs': {'1': ''},
-        'uploadDate': DateTime.now(),
-        'isProcessed': false,
-        'styleWeight': styleWeight,
-        'contentWeight': contentWeight,
-        'epoch': epoch,
-        'runOnUpload': runOnUpload,
-        'startDate': runOnUpload ? DateTime.now() : '',
-      };
-      createProcessDoc(
-        uid: uid,
-        processName: processName,
-        data: data,
-      );
+        //* set flag to indicate unprocessed data
+        await Firestore.instance
+            .collection('images')
+            .document(uid)
+            .setData({'hasUnprocessedFlag': true});
+
+        data = {
+          'uid': uid,
+          'processName': processName,
+          'locContent': contentLoc,
+          'locIconContent': iconContentLoc,
+          'locStyle': styleLoc,
+          'locIconStyle': iconStyleLoc,
+          'locOutputs': {'1': ''},
+          'locIconOutputs': {'1': ''},
+          'uploadDate': DateTime.now(),
+          'isProcessed': false,
+          'styleWeight': styleWeight,
+          'contentWeight': contentWeight,
+          'epoch': epoch,
+          'runOnUpload': runOnUpload,
+          'startDate': runOnUpload ? DateTime.now() : '',
+          'deleteProcess': false,
+        };
+
+        createProcessDoc(
+          uid: uid,
+          processName: processName,
+          data: data,
+        );
+
+        yield _imageStorageService
+            .firebaseStorage()
+            .ref()
+            .child(contentLoc)
+            .putFile(image);
+      } else {
+        //* upload image to storage
+        yield _imageStorageService
+            .firebaseStorage()
+            .ref()
+            .child(styleLoc)
+            .putFile(image);
+      }
+    } else {
+      final Directory tempDir = Directory.systemTemp;
+      File iconFile;
+
+      if (image.readAsBytesSync().lengthInBytes >= 300000) {
+        var iconImage = decodeImage(image.readAsBytesSync());
+        var icon;
+        // print([iconImage.width, iconImage.height]);
+        if (iconImage.width > iconImage.height) {
+          icon = copyResize(iconImage, width: 500);
+        } else {
+          icon = copyResize(iconImage, height: 500);
+        }
+        File('${tempDir.path}/icon.jpg').writeAsBytesSync(encodeJpg(icon));
+        iconFile = File('${tempDir.path}/icon.jpg');
+      } else {
+        iconFile = image;
+      }
+
+      yield _imageStorageService
+          .firebaseStorage()
+          .ref()
+          .child(isContent ? iconContentLoc : iconStyleLoc)
+          .putFile(iconFile);
     }
-
-    //* upload image to storage
-    //TODO: upload icon sized images
-    yield _imageStorageService
-        .firebaseStorage()
-        .ref()
-        .child(isContent ? contentLoc : styleLoc)
-        .putFile(image);
-
-    _imageStorageService
-        .firebaseStorage()
-        .ref()
-        .child(isContent ? iconContentLoc : iconStyleLoc)
-        .putFile(iconFile);
   }
 
   Future<void> createProcessDoc({
