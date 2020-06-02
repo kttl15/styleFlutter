@@ -147,13 +147,13 @@ class _ProcessMenuState extends State<ProcessMenu> {
                       fontSize: 18,
                     ),
                   ),
-                  Text(
-                    'RunOnUpload: ${widget._data.runOnUpload}',
-                    textScaleFactor: widget.textScale,
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
+                  // Text(
+                  //   'RunOnUpload: ${widget._data.runOnUpload}',
+                  //   textScaleFactor: widget.textScale,
+                  //   style: TextStyle(
+                  //     fontSize: 18,
+                  //   ),
+                  // ),
                   SizedBox(height: 10),
                   if (state is ImageDownloadedState && widget._data.isProcessed)
                     _outputWidget()

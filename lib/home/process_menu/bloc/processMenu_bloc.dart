@@ -64,7 +64,6 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
     File iconStyleFile;
     List<File> iconOutputFiles = List<File>();
     List<Future<void>> getOps = List<Future<void>>();
-    //TODO: implement output file
 
     Future<void> _getFile({
       @required File file,
@@ -90,10 +89,10 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
       data.locOutputs.forEach((key, value) {
         List<String> outputNameList = value.split('/').toList();
         String outputName = outputNameList[outputNameList.length - 1];
-        File tempFile =
+        File outputFile =
             File('${tempDir.path}/${data.uid}${data.processName}_$outputName');
-        iconOutputFiles.add(tempFile);
-        getOps.add(_getFile(file: tempFile, loc: value));
+        iconOutputFiles.add(outputFile);
+        getOps.add(_getFile(file: outputFile, loc: value));
       });
     }
 
@@ -101,14 +100,18 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
   }
 
   _startProcess({@required OutputData data}) {
-    //* update hasUnprocessedFlag
-    //TODO: update start date
     Firestore.instance
         .collection('images')
         .document(data.uid)
         .updateData({'hasUnprocessedFlag': true});
 
-    //* update runOnUpload flag
+    Firestore.instance
+        .collection('images')
+        .document(data.uid)
+        .collection('process')
+        .document(data.processName)
+        .updateData({'startDate': DateTime.now()});
+
     Firestore.instance
         .collection('images')
         .document(data.uid)

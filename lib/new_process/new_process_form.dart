@@ -170,7 +170,6 @@ class _NewProcessFormState extends State<NewProcessForm> {
                     enabled: !_uploadLoading,
                     validator: (String val) {
                       val = val.trim();
-                      //TODO: implement a more robust validator
                       if (_isProcessNameUsed) {
                         return 'You already have this process name. Please choose another.';
                       } else if (!_isValidProcessChar(val)) {
@@ -443,11 +442,11 @@ class _NewProcessFormState extends State<NewProcessForm> {
                   else if (state is InProgress)
                     Column(
                       children: <Widget>[
-                        LinearProgressIndicator(
-                          value: state.progressPct(),
-                        ),
+                        // LinearProgressIndicator(
+                        //   value: state.progressPct(),
+                        // ),
                         Text('Progress: ${state.progressPct()}'),
-                        Text('State: ${state.progressState()}'),
+                        // Text('State: ${state.progressState()}'),
                       ],
                     )
                   else if (state is Completed)

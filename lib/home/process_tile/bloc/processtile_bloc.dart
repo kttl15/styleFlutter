@@ -35,7 +35,8 @@ class ProcessTileBloc extends Bloc<ProcessTileEvent, ProcessTileState> {
         File('${tempDir.path}/${data.uid}${data.processName}_iconOutput.jpg');
     print(iconOutputFile.path);
     try {
-      if (!iconOutputFile.existsSync()) {
+      if (!iconOutputFile.existsSync() ||
+          iconOutputFile.readAsBytesSync().length == 0) {
         iconOutputFile.createSync();
         await FirebaseStorage.instance
             .ref()
