@@ -33,7 +33,7 @@ class _AddNewProcessState extends State<AddNewProcess> {
               create: (context) => UploadBloc(),
             ),
             BlocProvider<ListViewBloc>(
-              create: (context) => ListViewBloc(),
+              create: (context) => ListViewBloc(user: widget.user),
             )
           ],
           child: NewProcessForm(

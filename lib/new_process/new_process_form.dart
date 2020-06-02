@@ -79,12 +79,12 @@ class _NewProcessFormState extends State<NewProcessForm> {
       return false;
   }
 
-  ScaffoldState _showSnackBar({String text}) {
+  ScaffoldState _showSnackBar({@required String text, int seconds}) {
     return Scaffold.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
         content: Text(text),
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: seconds != null ? seconds : 1),
       ));
   }
 
@@ -140,7 +140,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
           _showSnackBar(text: 'Done');
         }
         if (state is InProgress && showUploadingSnackBar) {
-          _showSnackBar(text: 'Uploading');
+          _showSnackBar(text: 'Uploading. Do Not Exit', seconds: 2);
           setState(() {
             showUploadingSnackBar = false;
           });
@@ -304,6 +304,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                             inactiveColor: Colors.blue,
                             value: _contentWeight,
                             onChanged: (val) {
+                              _looseKeyboardFocus();
                               setState(() {
                                 _contentWeight = val;
                               });
@@ -331,6 +332,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                             inactiveColor: Colors.blue,
                             value: _styleWeight,
                             onChanged: (val) {
+                              _looseKeyboardFocus();
                               setState(() {
                                 _styleWeight = val;
                               });
@@ -386,6 +388,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                             value: true,
                             groupValue: _uploadRadioButton,
                             onChanged: (val) {
+                              _looseKeyboardFocus();
                               setState(() {
                                 _uploadRadioButton = val;
                               });
@@ -402,6 +405,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                             value: false,
                             groupValue: _uploadRadioButton,
                             onChanged: (val) {
+                              _looseKeyboardFocus();
                               setState(() {
                                 _uploadRadioButton = val;
                               });
@@ -457,7 +461,6 @@ class _NewProcessFormState extends State<NewProcessForm> {
                       ),
                       child: Text('Done'),
                       onPressed: () {
-                        // BlocProvider.of<ListViewBloc>(context).add(RefreshData());
                         Navigator.pop(context);
                       },
                     ),

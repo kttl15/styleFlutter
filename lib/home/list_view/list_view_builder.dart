@@ -79,9 +79,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       create: (context) => ProcessMenuBloc(),
                                     ),
                                     BlocProvider(
-                                      create: (context) => ListViewBloc(),
-                                    ),
-                                    BlocProvider(
                                       create: (context) => ProcessTileBloc(),
                                     )
                                   ],

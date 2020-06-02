@@ -123,6 +123,5 @@ class _ProcessTileState extends State<ProcessTile> {
         print('StartProcess');
         break;
     }
-    // _listViewBloc.add(RefreshData());
   }
 }

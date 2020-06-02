@@ -87,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
         body: MultiBlocProvider(
           providers: [
             BlocProvider<ListViewBloc>(
-              create: (context) => ListViewBloc()..add(FetchData()),
+              create: (context) =>
+                  ListViewBloc(user: widget.user)..add(FetchData()),
             ),
             // BlocProvider<UploadBloc>(
             //   create: (context) => UploadBloc(),
