@@ -8,6 +8,8 @@ import 'package:gan2/new_process/uploader.dart';
 import 'package:meta/meta.dart';
 import 'dart:io';
 
+import 'package:rxdart/rxdart.dart';
+
 part 'upload_event.dart';
 part 'upload_state.dart';
 
@@ -39,7 +41,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
         yield ProcessNameUsedState(processName: event.processName);
       }
     } else if (event is Update) {
-      yield* _mapUpdate(task: event.task);
+      yield* _mapUpdate(event1: event.event1);
     } else if (event is UploadCompleted) {
       yield* _mapUploadCompleted();
     }
@@ -68,15 +70,12 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     @required double contentWeight,
     @required int epoch,
     @required bool runOnUpload,
-  }) {
-    Uploader upload1 = Uploader();
-    Uploader upload2 = Uploader();
-    Stream<StorageUploadTask> storageUploadTask1;
-    Stream<StorageUploadTask> storageUploadTask2;
-    storageUploadTask1 = upload1.upload(
+  }) async {
+    Stream<StorageUploadTask> storageUploadTask1 = Uploader().upload(
       //* upload content image and related settings
       createProcess: true,
       isContent: true,
+      isIcon: false,
       image: contentFile,
       processName: processName,
       contentWeight: contentWeight,
@@ -85,44 +84,93 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
       runOnUpload: runOnUpload,
     );
 
-    storageUploadTask2 = upload2.upload(
+    Stream<StorageUploadTask> storageUploadTask2 = Uploader().upload(
       //* only upload style image
       createProcess: false,
       isContent: false,
+      isIcon: false,
       image: styleFile,
       processName: processName,
     );
-    storageUploadTask1.listen((val) {
-      val.events.listen((val) {
-        switch (val.type.index) {
-          case 0:
-            //* resume
-            break;
-          case 1:
-            //* in progress
-            return add(Update(task: val));
-            break;
-          case 2:
-            //* paused
-            break;
-          case 3:
-            //* success
-            return add(UploadCompleted());
-            break;
-          case 4:
-            //* failed
-            break;
-        }
-      });
+
+    Stream<StorageUploadTask> storageUploadTask3 = Uploader().upload(
+      createProcess: false,
+      processName: processName,
+      image: contentFile,
+      isContent: true,
+      isIcon: true,
+    );
+
+    Stream<StorageUploadTask> storageUploadTask4 = Uploader().upload(
+      createProcess: false,
+      processName: processName,
+      image: styleFile,
+      isContent: false,
+      isIcon: true,
+    );
+    // StorageTaskEvent event1;
+    // StorageTaskEvent event2;
+    // StorageTaskEvent event3;
+    // StorageTaskEvent event4;
+
+    // storageUploadTask1.asBroadcastStream().listen((event) {
+    //   event.events.listen((event1) {
+    //     storageUploadTask2.asBroadcastStream().listen((event) {
+    //       event.events.listen((event2) {
+    //         storageUploadTask3.asBroadcastStream().listen((event) {
+    //           event.events.listen((event3) {
+    //             storageUploadTask4.asBroadcastStream().listen((event) {
+    //               event.events.listen((event4) {
+    //                 add(Update(
+    //                   event1: event1,
+    //                   event2: event2,
+    //                   event3: event3,
+    //                   event4: event4,
+    //                 ));
+    //               });
+    //             });
+    //           });
+    //         });
+    //       });
+    //     });
+    //   });
+    // });
+    MergeStream<StorageUploadTask> streams = MergeStream<StorageUploadTask>([
+      storageUploadTask1,
+      storageUploadTask2,
+      storageUploadTask3,
+      storageUploadTask4,
+    ]);
+
+    streams.listen((event) {}).onDone(() {
+      add(UploadCompleted());
     });
 
-    storageUploadTask2.listen((_) {});
+    // storageUploadTask2.listen((event) {
+    //   event.events.listen((event) {
+    //     // event2 = event;
+    //   });
+    // });
+
+    // storageUploadTask3.listen((event) {
+    //   event.events.listen((event) {
+    //     // event3 = event;
+    //   });
+    // });
+
+    // storageUploadTask4.listen((event) {
+    //   event.events.listen((event) {
+    //     // event4 = event;
+    //   });
+    // });
+
+    // add(Update(event1: event1, event2: event2, event3: event3, event4: event4));
   }
 
   Stream<UploadState> _mapUpdate({
-    @required StorageTaskEvent task,
+    @required StorageTaskEvent event1,
   }) async* {
-    yield InProgress(task: task);
+    yield InProgress(event1: event1);
   }
 
   Stream<UploadState> _mapUploadCompleted() async* {

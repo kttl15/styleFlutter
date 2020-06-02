@@ -33,16 +33,25 @@ class StartUpload extends UploadEvent {
 }
 
 class Update extends UploadEvent {
-  final StorageTaskEvent task;
+  final StorageTaskEvent event1;
+  final StorageTaskEvent event2;
+  final StorageTaskEvent event3;
+  final StorageTaskEvent event4;
 
-  Update({@required this.task});
+  Update({this.event1, this.event2, this.event3, this.event4});
+  // int _totalBytes() {
+  //   return event1.snapshot.bytesTransferred +
+  //       event2.snapshot.bytesTransferred +
+  //       event3.snapshot.bytesTransferred +
+  //       event4.snapshot.bytesTransferred;
+  // }
 
   double _transferred() {
-    return (task.snapshot.bytesTransferred / 1024).roundToDouble();
+    return (event1.snapshot.bytesTransferred / 1024).roundToDouble();
   }
 
   @override
-  List<Object> get props => [task];
+  List<Object> get props => [event1, event2, event3, event4];
 
   @override
   String toString() => 'Tick ${_transferred()}kB';

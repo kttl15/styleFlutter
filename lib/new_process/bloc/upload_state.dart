@@ -12,39 +12,47 @@ class Initial extends UploadState {
 }
 
 class InProgress extends UploadState {
-  final StorageTaskEvent task;
+  final StorageTaskEvent event1;
+  final StorageTaskEvent event2;
+  final StorageTaskEvent event3;
+  final StorageTaskEvent event4;
 
-  InProgress({@required this.task});
+  InProgress({
+    @required this.event1,
+    this.event2,
+    this.event3,
+    this.event4,
+  });
 
   @override
-  List<Object> get props => [task];
+  List<Object> get props => [event1];
 
   double progressPct() {
-    return task.snapshot.bytesTransferred / task.snapshot.totalByteCount;
+    return event1.snapshot.bytesTransferred / event1.snapshot.totalByteCount;
   }
 
-  progressState() {
-    switch (task.type.index) {
-      case 0:
-        return 'resumed';
-        break;
-      case 1:
-        return 'inProgress';
-        break;
-      case 2:
-        return 'paused';
-        break;
-      case 3:
-        return 'success';
-        break;
-      case 4:
-        return 'failed';
-        break;
-      default:
-        return 'Null';
-        break;
-    }
-  }
+  // progressState() {
+  //   switch (events.type.index) {
+  //     case 0:
+  //       return 'resumed';
+  //       break;
+  //     case 1:
+  //       return 'inProgress';
+  //       break;
+  //     case 2:
+  //       return 'paused';
+  //       break;
+  //     case 3:
+  //       return 'success';
+  //       break;
+  //     case 4:
+  //       return 'failed';
+  //       break;
+  //     default:
+  //       return 'Null';
+  //       break;
+  //   }
+  // }
 }
 
 class ProcessNameUsedState extends UploadState {
