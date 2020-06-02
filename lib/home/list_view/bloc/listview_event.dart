@@ -1,18 +1,18 @@
 part of 'listview_bloc.dart';
 
-abstract class ListViewEvent extends Equatable {
-  const ListViewEvent();
+abstract class ListViewBuilderEvent extends Equatable {
+  const ListViewBuilderEvent();
 
   @override
   List<Object> get props => null;
 }
 
-class FetchData extends ListViewEvent {
+class FetchData extends ListViewBuilderEvent {
   @override
   String toString() => 'Fetching data.';
 }
 
-class RefreshData extends ListViewEvent {
+class RefreshData extends ListViewBuilderEvent {
   @override
   String toString() => 'Refreshing data.';
 }

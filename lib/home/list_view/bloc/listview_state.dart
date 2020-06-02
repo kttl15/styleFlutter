@@ -1,31 +1,31 @@
 part of 'listview_bloc.dart';
 
-abstract class ListViewState extends Equatable {
-  const ListViewState();
+abstract class ListViewBuilderState extends Equatable {
+  const ListViewBuilderState();
 
   @override
   List<Object> get props => [];
 }
 
-class ListViewInitial extends ListViewState {}
+class ListViewBuilderInitial extends ListViewBuilderState {}
 
-class ListViewLoaded extends ListViewState {
+class ListViewBuilderLoaded extends ListViewBuilderState {
   final List<OutputData> data;
 
-  ListViewLoaded({this.data});
+  ListViewBuilderLoaded({this.data});
 
   @override
   List<Object> get props => [data];
 
   @override
-  String toString() => 'ListViewLoaded {length: ${data.length}}';
+  String toString() => 'ListViewBuilderLoaded {length: ${data.length}}';
 }
 
-class ListViewError extends ListViewState {
+class ListViewBuilderError extends ListViewBuilderState {
   final error;
 
-  ListViewError(this.error);
+  ListViewBuilderError(this.error);
 
   @override
-  String toString() => 'Error {${error.toString()}}';
+  String toString() => 'ListViewBuilderError: {${error.toString()}}';
 }

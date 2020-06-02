@@ -16,7 +16,7 @@ class ListViewBuilder extends StatefulWidget {
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
-  ListViewBloc _listViewBloc;
+  ListViewBuilderBloc _listViewBloc;
 
   Future<void> _onRefresh() async {
     _listViewBloc.add(RefreshData());
@@ -24,14 +24,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    _listViewBloc = BlocProvider.of<ListViewBloc>(context);
+    _listViewBloc = BlocProvider.of<ListViewBuilderBloc>(context);
     return Padding(
       padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
       child: Scaffold(
-        body: BlocConsumer<ListViewBloc, ListViewState>(
+        body: BlocConsumer<ListViewBuilderBloc, ListViewBuilderState>(
           listener: (context, state) {
             print(state);
-            if (state is ListViewLoaded) {
+            if (state is ListViewBuilderLoaded) {
               print('listen');
               return true;
             }
@@ -39,7 +39,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
           },
           builder: (context, state) {
             print('build');
-            if (state is ListViewLoaded) {
+            if (state is ListViewBuilderLoaded) {
               if (state.data.isEmpty) {
                 return Container(
                   child: Center(

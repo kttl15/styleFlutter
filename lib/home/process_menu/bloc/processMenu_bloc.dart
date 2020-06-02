@@ -29,17 +29,8 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
     }
   }
 
-  _deleteProcess({@required OutputData data}) async {
-    Firestore.instance
-        .collection('images')
-        .document(data.uid)
-        .collection('process')
-        .document(data.processName)
-        .updateData({'deleteProcess': true});
-    print('Deleted');
-  }
-
   Future<void> _downloadImages({@required OutputData data}) async {
+    // async download multiple images
     final Directory tempDir = Directory.systemTemp;
     File iconContentFile;
     File iconStyleFile;
@@ -47,6 +38,7 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
     List<Future<void>> getOps = List<Future<void>>();
 
     Future<void> _getFile({
+      // downloads a file to the specified location
       @required File file,
       @required String loc,
     }) async {
@@ -80,18 +72,23 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
     await Future.wait(getOps).then((_) {});
   }
 
-  _startProcess({@required OutputData data}) {
-    Firestore.instance
-        .collection('images')
-        .document(data.uid)
-        .updateData({'hasUnprocessedFlag': true});
-
+  void _deleteProcess({@required OutputData data}) async {
+    // updates 'deleteProcess' flag to true
     Firestore.instance
         .collection('images')
         .document(data.uid)
         .collection('process')
         .document(data.processName)
-        .updateData({'startDate': DateTime.now()});
+        .updateData({'deleteProcess': true});
+    print('Deleted');
+  }
+
+  void _startProcess({@required OutputData data}) {
+    // updates several flags
+    Firestore.instance
+        .collection('images')
+        .document(data.uid)
+        .updateData({'hasUnprocessedFlag': true});
 
     Firestore.instance
         .collection('images')

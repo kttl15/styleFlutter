@@ -23,13 +23,13 @@ class _ProcessTileState extends State<ProcessTile> {
   final Directory tempDir = Directory.systemTemp;
   File iconOutputFile;
   ProcessMenuBloc _processMenuBloc;
-  ProcessTileBloc _processTileBloc;
 
   @override
   void initState() {
     _processMenuBloc = BlocProvider.of<ProcessMenuBloc>(context);
-    _processTileBloc = BlocProvider.of<ProcessTileBloc>(context);
-    _processTileBloc.add(DownloadOutputEvent(data: widget._data));
+    BlocProvider.of<ProcessTileBloc>(context)
+        .add(DownloadOutputEvent(data: widget._data));
+
     super.initState();
   }
 
@@ -69,7 +69,7 @@ class _ProcessTileState extends State<ProcessTile> {
                     size: 60,
                   ),
                 ),
-          onLongPress: () {}, //TODO: popup menu to download or share ...
+          // onLongPress: () {},
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: ((context) {

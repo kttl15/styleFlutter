@@ -20,15 +20,14 @@ class ProcessMenu extends StatefulWidget {
 
 class _ProcessMenuState extends State<ProcessMenu> {
   final Directory tempDir = Directory.systemTemp;
-  ProcessMenuBloc _processTileBloc;
   File iconContentFile;
   File iconStyleFile;
   List<File> iconOutputFiles = List<File>();
 
   @override
   void initState() {
-    _processTileBloc = BlocProvider.of<ProcessMenuBloc>(context);
-    _processTileBloc.add(DownloadImagesEvent(data: widget._data));
+    BlocProvider.of<ProcessMenuBloc>(context)
+        .add(DownloadImagesEvent(data: widget._data));
     super.initState();
   }
 
@@ -169,6 +168,8 @@ class _ProcessMenuState extends State<ProcessMenu> {
   }
 
   Widget _outputWidget() {
+    // returns a column widget which contains a list of output images
+    // and their correponding captions.
     List<Widget> list = List<Widget>();
     int i = 1;
     iconOutputFiles.sort((a, b) => a.path.compareTo(b.path));
@@ -195,6 +196,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
   }
 
   void _saveFile(File file) async {
+    // saves a given image to a permanent dir
     final Directory saveDir = await pPath.getExternalStorageDirectory();
     final File savePath = File('${saveDir.path}/${widget._data.processName}_' +
         file.path.split('_')[2]);
@@ -204,6 +206,7 @@ class _ProcessMenuState extends State<ProcessMenu> {
   }
 
   void _showLongPressOptions({@required File file}) {
+    // shows options to save or share the image
     showDialog(
       context: context,
       builder: (context) {

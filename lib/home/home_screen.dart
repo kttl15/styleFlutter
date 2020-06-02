@@ -25,19 +25,16 @@ class _HomeScreenState extends State<HomeScreen> {
       case 'smallFont':
         setState(() {
           textScale = 0.5;
-          // AppTheme().textScale = 0.5;
         });
         break;
       case 'mediumFont':
         setState(() {
           textScale = 0.7;
-          // AppTheme().textScale = 0.5;
         });
         break;
       case 'bigFont':
         setState(() {
           textScale = 1.0;
-          // AppTheme().textScale = 1.0;
         });
         break;
       default:
@@ -86,9 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: MultiBlocProvider(
           providers: [
-            BlocProvider<ListViewBloc>(
+            BlocProvider<ListViewBuilderBloc>(
               create: (context) =>
-                  ListViewBloc(user: widget.user)..add(FetchData()),
+                  ListViewBuilderBloc(user: widget.user)..add(FetchData()),
             ),
             // BlocProvider<UploadBloc>(
             //   create: (context) => UploadBloc(),

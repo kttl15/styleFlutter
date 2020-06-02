@@ -5,38 +5,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gan2/model/data.dart';
-import 'package:gan2/services/user_repo.dart';
 import 'package:meta/meta.dart';
 
 part 'listview_event.dart';
 part 'listview_state.dart';
 
-class ListViewBloc extends Bloc<ListViewEvent, ListViewState> {
+class ListViewBuilderBloc
+    extends Bloc<ListViewBuilderEvent, ListViewBuilderState> {
   final FirebaseUser user;
 
-  ListViewBloc({@required this.user});
+  ListViewBuilderBloc({@required this.user});
   @override
-  ListViewState get initialState => ListViewInitial();
+  ListViewBuilderState get initialState => ListViewBuilderInitial();
 
   @override
-  Stream<ListViewState> mapEventToState(ListViewEvent event) async* {
+  Stream<ListViewBuilderState> mapEventToState(
+      ListViewBuilderEvent event) async* {
     if (event is FetchData) {
       try {
-        if (state is ListViewInitial) {
+        if (state is ListViewBuilderInitial) {
           final List<OutputData> data = await _fetchData(user);
-          yield ListViewLoaded(data: data);
+          yield ListViewBuilderLoaded(data: data);
           return;
         }
-        if (state is ListViewLoaded) {
+        if (state is ListViewBuilderLoaded) {
           await _fetchData(user);
         }
       } catch (e) {
         //* print(e.toString());
-        yield ListViewError(e);
+        yield ListViewBuilderError(e);
       }
     } else if (event is RefreshData) {
       final List<OutputData> data = await _fetchData(user);
-      yield ListViewLoaded(data: data);
+      yield ListViewBuilderLoaded(data: data);
       return;
     }
   }
