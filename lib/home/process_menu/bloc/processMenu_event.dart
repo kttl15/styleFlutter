@@ -1,32 +1,32 @@
-part of 'processMenu_bloc.dart';
+// part of 'processMenu_bloc.dart';
 
-abstract class ProcessMenuEvent extends Equatable {
-  const ProcessMenuEvent();
-  @override
-  List<Object> get props => null;
-}
+// abstract class ProcessMenuEvent extends Equatable {
+//   const ProcessMenuEvent();
+//   @override
+//   List<Object> get props => null;
+// }
 
-class DownloadImagesEvent extends ProcessMenuEvent {
-  final OutputData data;
+// class DownloadImagesEvent extends ProcessMenuEvent {
+//   final OutputData data;
 
-  DownloadImagesEvent({@required this.data});
-  @override
-  String toString() => 'DownloadImagesEvent';
-}
+//   DownloadImagesEvent({@required this.data});
+//   @override
+//   String toString() => 'DownloadImagesEvent';
+// }
 
-class DeleteProcessEvent extends ProcessMenuEvent {
-  final OutputData data;
+// class DeleteProcessEvent extends ProcessMenuEvent {
+//   final OutputData data;
 
-  DeleteProcessEvent({@required this.data});
-  @override
-  String toString() => 'DeleteProcessEvent';
-}
+//   DeleteProcessEvent({@required this.data});
+//   @override
+//   String toString() => 'DeleteProcessEvent';
+// }
 
-class StartProcessEvent extends ProcessMenuEvent {
-  final OutputData data;
+// class StartProcessEvent extends ProcessMenuEvent {
+//   final OutputData data;
 
-  StartProcessEvent({@required this.data});
-  @override
-  String toString() => 'StartProcessEvent';
-}
-// class DownloadImagesCompletedEvent extends ProcessTileEvent {}
+//   StartProcessEvent({@required this.data});
+//   @override
+//   String toString() => 'StartProcessEvent';
+// }
+// // class DownloadImagesCompletedEvent extends ProcessTileEvent {}

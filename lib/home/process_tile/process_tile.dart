@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gan2/home/process_menu/bloc/processMenu_bloc.dart';
+// import 'package:gan2/home/process_menu/bloc/processMenu_bloc.dart';
 import 'package:gan2/home/process_menu/main_process_menu.dart';
 import 'package:gan2/home/process_tile/bloc/processtile_bloc.dart';
 import 'package:gan2/model/data.dart';
@@ -22,11 +23,9 @@ class ProcessTile extends StatefulWidget {
 class _ProcessTileState extends State<ProcessTile> {
   final Directory tempDir = Directory.systemTemp;
   File iconOutputFile;
-  ProcessMenuBloc _processMenuBloc;
 
   @override
   void initState() {
-    _processMenuBloc = BlocProvider.of<ProcessMenuBloc>(context);
     BlocProvider.of<ProcessTileBloc>(context)
         .add(DownloadOutputEvent(data: widget._data));
 
@@ -73,12 +72,9 @@ class _ProcessTileState extends State<ProcessTile> {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: ((context) {
-                return BlocProvider<ProcessMenuBloc>(
-                  create: (context) => ProcessMenuBloc(),
-                  child: ProcessMenu(
-                    data: widget._data,
-                    textScale: widget.textScale,
-                  ),
+                return ProcessMenu(
+                  data: widget._data,
+                  textScale: widget.textScale,
                 );
               }),
             ));
@@ -111,15 +107,43 @@ class _ProcessTileState extends State<ProcessTile> {
     );
   }
 
+  void _deleteProcess({@required OutputData data}) {
+    // updates 'deleteProcess' flag to true
+    Firestore.instance
+        .collection('images')
+        .document(data.uid)
+        .collection('process')
+        .document(data.processName)
+        .updateData({'deleteProcess': true});
+  }
+
+  void _startProcess({@required OutputData data}) {
+    // updates several flags
+    Firestore.instance
+        .collection('images')
+        .document(data.uid)
+        .updateData({'hasUnprocessedFlag': true});
+
+    Firestore.instance
+        .collection('images')
+        .document(data.uid)
+        .collection('process')
+        .document(data.processName)
+        .updateData({
+      'runOnUpload': true,
+      'startDate': DateTime.now(),
+    });
+  }
+
   _popupMenuClick(String val) {
     switch (val) {
       case 'delete':
-        _processMenuBloc.add(DeleteProcessEvent(data: widget._data));
+        _deleteProcess(data: widget._data);
         print('DeleteProcess');
         break;
 
       case 'start':
-        _processMenuBloc.add(StartProcessEvent(data: widget._data));
+        _startProcess(data: widget._data);
         print('StartProcess');
         break;
     }
