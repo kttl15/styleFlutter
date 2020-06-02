@@ -30,31 +30,12 @@ class ProcessMenuBloc extends Bloc<ProcessMenuEvent, ProcessMenuState> {
   }
 
   _deleteProcess({@required OutputData data}) async {
-    final String path = 'images/${data.uid}/${data.processName}/';
     Firestore.instance
         .collection('images')
         .document(data.uid)
         .collection('process')
         .document(data.processName)
-        .delete();
-    try {
-      _stoRef.child(path + 'content.jpg').delete();
-    } catch (_) {}
-    try {
-      _stoRef.child(path + 'iconContent.jpg').delete();
-    } catch (_) {}
-    try {
-      _stoRef.child(path + 'style.jpg').delete();
-    } catch (_) {}
-    try {
-      _stoRef.child(path + 'iconStyle.jpg').delete();
-    } catch (_) {}
-    // try {
-    //   _stoRef.child(path + 'output.jpg').delete();
-    // } catch (_) {}
-    // try {
-    //   _stoRef.child(path + 'iconOutput.jpg').delete();
-    // } catch (_) {}
+        .updateData({'deleteProcess': true});
     print('Deleted');
   }
 
