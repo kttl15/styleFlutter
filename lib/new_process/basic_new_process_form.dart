@@ -8,23 +8,21 @@ import 'dart:io';
 import 'package:gan2/new_process/choose_image.dart';
 import 'package:gan2/new_process/upload_button.dart';
 
-class NewProcessForm extends StatefulWidget {
+class BasicNewProcessForm extends StatefulWidget {
   final FirebaseUser user;
   final double textScale;
 
-  const NewProcessForm({Key key, @required this.user, @required this.textScale})
+  const BasicNewProcessForm(
+      {Key key, @required this.user, @required this.textScale})
       : super(key: key);
   @override
-  _NewProcessFormState createState() => _NewProcessFormState();
+  _BasicNewProcessFormState createState() => _BasicNewProcessFormState();
 }
 
-class _NewProcessFormState extends State<NewProcessForm> {
+class _BasicNewProcessFormState extends State<BasicNewProcessForm> {
   File _contentImage;
   File _styleImage;
   String _processName = '';
-  double _contentWeight = 1;
-  double _styleWeight = 1;
-  String _epoch;
   bool showUploadingSnackBar = true;
   bool _uploadRadioButton = true;
   bool _uploadLoading = false;
@@ -55,9 +53,9 @@ class _NewProcessFormState extends State<NewProcessForm> {
       contentFile: _contentImage,
       processName: _processName,
       styleFile: _styleImage,
-      contentWeight: _contentWeight,
-      styleWeight: _styleWeight,
-      epoch: int.parse(_epoch),
+      contentWeight: 3,
+      styleWeight: 3,
+      epoch: 10,
       runOnUpload: _uploadRadioButton,
     ));
   }
@@ -66,28 +64,8 @@ class _NewProcessFormState extends State<NewProcessForm> {
     //* ensures that process name and both images are present
     return _processName.length >= 4 &&
         _styleImage != null &&
-        _contentImage != null &&
-        _validateEpoch();
+        _contentImage != null;
   }
-
-  bool _validateEpoch() {
-    if (_epoch != '' &&
-        RegExp(r'^[0-9]*$').hasMatch(_epoch.toString()) &&
-        int.parse(_epoch) >= 1 &&
-        int.parse(_epoch) <= 20)
-      return true;
-    else
-      return false;
-  }
-
-  // ScaffoldState _showSnackBar({@required String text, int seconds}) {
-  //   return Scaffold.of(context)
-  //     ..hideCurrentSnackBar()
-  //     ..showSnackBar(SnackBar(
-  //       content: Text(text),
-  //       duration: Duration(seconds: seconds != null ? seconds : 1),
-  //     ));
-  // }
 
   Widget _customText({
     @required String text,
@@ -236,6 +214,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                         title: Text(
                           'Content Image',
                           style: Theme.of(context).textTheme.headline4,
+                          textScaleFactor: widget.textScale,
                         ),
                         onTap: () async {
                           _looseKeyboardFocus();
@@ -276,6 +255,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                         title: Text(
                           'Style Image',
                           style: Theme.of(context).textTheme.headline4,
+                          textScaleFactor: widget.textScale,
                         ),
                         onTap: () async {
                           _looseKeyboardFocus();
@@ -302,96 +282,6 @@ class _NewProcessFormState extends State<NewProcessForm> {
                   Row(
                     children: <Widget>[
                       _customText(
-                          text: 'Content Weight: ',
-                          toolTip:
-                              'Determines how much of the content image is used.'),
-                      Expanded(
-                        child: SliderTheme(
-                          data: SliderThemeData(),
-                          child: Slider(
-                            label: _contentWeight.round().toString(),
-                            divisions: 9,
-                            min: 1,
-                            max: 10,
-                            activeColor: Colors.blue,
-                            inactiveColor: Colors.blue,
-                            value: _contentWeight,
-                            onChanged: (val) {
-                              _looseKeyboardFocus();
-                              setState(() {
-                                _contentWeight = val;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      _customText(
-                          text: 'Style Weight: ',
-                          toolTip:
-                              'Determines how much of the style image is used.'),
-                      Expanded(
-                        child: SliderTheme(
-                          data: SliderThemeData(),
-                          child: Slider(
-                            label: _styleWeight.round().toString(),
-                            divisions: 9,
-                            min: 1,
-                            max: 10,
-                            activeColor: Colors.blue,
-                            inactiveColor: Colors.blue,
-                            value: _styleWeight,
-                            onChanged: (val) {
-                              _looseKeyboardFocus();
-                              setState(() {
-                                _styleWeight = val;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      _customText(
-                          text: 'Duration: ',
-                          toolTip:
-                              'Determines how long the process is carried out.'),
-                      Expanded(
-                        child: TextFormField(
-                          enabled: !_uploadLoading,
-                          keyboardType: TextInputType.number,
-                          autovalidate: true,
-                          decoration: InputDecoration(
-                            hintText: "Enter a Duration from 1 - 20",
-                            hintStyle:
-                                Theme.of(context).textTheme.bodyText1.copyWith(
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                          ),
-                          validator: (val) {
-                            if (val == '') return 'Please Enter a Duration';
-                            if (!_validateEpoch())
-                              return "Invalid Input";
-                            else
-                              return null;
-                          },
-                          onChanged: (String val) {
-                            setState(() {
-                              _epoch = val;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      _customText(
                           text: 'Run On Upload?',
                           toolTip:
                               'Determines whether or not to run the process automatically after uploading.'),
@@ -409,6 +299,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                           ),
                           title: Text(
                             'Yes',
+                            textScaleFactor: widget.textScale,
                           ),
                         ),
                       ),
@@ -426,6 +317,7 @@ class _NewProcessFormState extends State<NewProcessForm> {
                           ),
                           title: Text(
                             'No',
+                            textScaleFactor: widget.textScale,
                           ),
                         ),
                       ),
