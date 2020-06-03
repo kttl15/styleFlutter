@@ -18,7 +18,7 @@ class ListViewBuilder extends StatefulWidget {
 class _ListViewBuilderState extends State<ListViewBuilder> {
   ListViewBuilderBloc _listViewBloc;
 
-  Future<void> _onRefresh() async {
+  Future<void> onRefresh() async {
     _listViewBloc.add(RefreshData());
   }
 
@@ -28,15 +28,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
     return Padding(
       padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
       child: Scaffold(
-        body: BlocConsumer<ListViewBuilderBloc, ListViewBuilderState>(
-          listener: (context, state) {
-            print(state);
-            if (state is ListViewBuilderLoaded) {
-              print('listen');
-              return true;
-            }
-            return true;
-          },
+        body: BlocBuilder<ListViewBuilderBloc, ListViewBuilderState>(
           builder: (context, state) {
             print('build');
             if (state is ListViewBuilderLoaded) {
@@ -60,7 +52,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               } else {
                 return RefreshIndicator(
                   color: Theme.of(context).primaryColor,
-                  onRefresh: _onRefresh,
+                  onRefresh: onRefresh,
                   child: ListView.builder(
                     reverse: false,
                     itemCount: state.data.length,
@@ -73,15 +65,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           child: Column(
                             children: <Widget>[
                               Center(
-                                child: MultiBlocProvider(
-                                  providers: [
-                                    // BlocProvider(
-                                    //   create: (context) => ProcessMenuBloc(),
-                                    // ),
-                                    BlocProvider(
-                                      create: (context) => ProcessTileBloc(),
-                                    )
-                                  ],
+                                child: BlocProvider(
+                                  create: (context) => ProcessTileBloc(),
                                   child: ProcessTile(
                                     data: state.data[index],
                                     textScale: widget.textScale,

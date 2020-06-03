@@ -8,21 +8,20 @@ import 'package:gan2/home/process_menu/process_image.dart';
 import 'package:gan2/model/data.dart';
 import 'package:path_provider/path_provider.dart' as pPath;
 
-class ProcessMenu extends StatefulWidget {
+class MainProcessMenu extends StatefulWidget {
   final OutputData _data;
   final double textScale;
-  const ProcessMenu({Key key, @required data, @required this.textScale})
+  const MainProcessMenu({Key key, @required data, @required this.textScale})
       : assert(data != null),
         _data = data,
         super(key: key);
 
   @override
-  _ProcessMenuState createState() => _ProcessMenuState();
+  _MainProcessMenuState createState() => _MainProcessMenuState();
 }
 
-class _ProcessMenuState extends State<ProcessMenu> {
+class _MainProcessMenuState extends State<MainProcessMenu> {
   final Directory tempDir = Directory.systemTemp;
-  final UniqueKey key = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,6 @@ class _ProcessMenuState extends State<ProcessMenu> {
     File iconStyleFile = File(
         '${tempDir.path}/${widget._data.uid}${widget._data.processName}_iconStyle.jpg');
     return Scaffold(
-      key: key,
       appBar: AppBar(
         title: Text(
           'Process Name: ${widget._data.processName}',

@@ -28,7 +28,6 @@ class _ProcessTileState extends State<ProcessTile> {
   void initState() {
     BlocProvider.of<ProcessTileBloc>(context)
         .add(DownloadOutputEvent(data: widget._data));
-
     super.initState();
   }
 
@@ -72,7 +71,7 @@ class _ProcessTileState extends State<ProcessTile> {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: ((context) {
-                return ProcessMenu(
+                return MainProcessMenu(
                   data: widget._data,
                   textScale: widget.textScale,
                 );
@@ -135,7 +134,7 @@ class _ProcessTileState extends State<ProcessTile> {
     });
   }
 
-  _popupMenuClick(String val) {
+  void _popupMenuClick(String val) {
     switch (val) {
       case 'delete':
         _deleteProcess(data: widget._data);
