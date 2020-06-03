@@ -43,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO refresh when done uploading
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: textScale),
       child: Scaffold(
@@ -81,16 +80,9 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ),
-        body: MultiBlocProvider(
-          providers: [
-            BlocProvider<ListViewBuilderBloc>(
-              create: (context) =>
-                  ListViewBuilderBloc(user: widget.user)..add(FetchData()),
-            ),
-            // BlocProvider<UploadBloc>(
-            //   create: (context) => UploadBloc(),
-            // ),
-          ],
+        body: BlocProvider<ListViewBuilderBloc>(
+          create: (context) =>
+              ListViewBuilderBloc(user: widget.user)..add(FetchData()),
           child: ListViewBuilder(
             textScale: textScale,
           ),

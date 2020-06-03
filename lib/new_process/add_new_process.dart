@@ -48,15 +48,8 @@ class _AddNewProcessState extends State<AddNewProcess> {
         ),
       ),
       body: Center(
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<UploadBloc>(
-              create: (context) => UploadBloc(),
-            ),
-            // BlocProvider<ListViewBuilderBloc>(
-            //   create: (context) => ListViewBuilderBloc(user: widget.user),
-            // )
-          ],
+        child: BlocProvider<UploadBloc>(
+          create: (context) => UploadBloc(),
           child: viewBasic
               ? BasicNewProcessForm(
                   user: widget.user,

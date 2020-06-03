@@ -33,20 +33,19 @@ class ProcessTileBloc extends Bloc<ProcessTileEvent, ProcessTileState> {
     File iconOutputFile;
     iconOutputFile =
         File('${tempDir.path}/${data.uid}${data.processName}_iconOutput.jpg');
-    print(iconOutputFile.path);
-    try {
-      if (!iconOutputFile.existsSync() ||
-          iconOutputFile.readAsBytesSync().length == 0) {
-        iconOutputFile.createSync();
-        await FirebaseStorage.instance
-            .ref()
-            .child(data.locIconContent) //! change to data.locIconOutput
-            .writeToFile(iconOutputFile)
-            .future;
-      }
+    // print(iconOutputFile.path);
+    if (!iconOutputFile.existsSync() ||
+        iconOutputFile.readAsBytesSync().length == 0) {
+      iconOutputFile.createSync();
+
+      await FirebaseStorage.instance
+          .ref()
+          .child(data.locIconContent) //! change to data.locIconOutput
+          .writeToFile(iconOutputFile)
+          .future;
       return true;
-    } catch (_) {
-      return false;
+    } else {
+      return true;
     }
   }
 }
